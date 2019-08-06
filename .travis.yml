@@ -1,0 +1,22 @@
+dist: xenial
+addons:
+  snaps:
+    - name: dotnet-sdk
+      confinement: classic
+      channel: latest/beta
+
+matrix:
+  include:
+    - language: csharp
+      mono: none
+      solution: ./SuperBack/SuperBack.sln
+      sudo: required
+      script:
+        - sudo snap alias dotnet-sdk.dotnet dotnet
+        - cd SuperBack
+        - dotnet restore
+        - dotnet build --configuration Debug
+        - dotnet test
+        - dotnet build --configuration Release
+
+
