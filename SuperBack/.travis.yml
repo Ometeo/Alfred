@@ -1,9 +1,0 @@
-language: csharp
-mono: none
-dotnet: 3.0
-solution: SuperBack.sln
-script:
-  - dotnet restore
-  - dotnet build --configuration Debug
-  - dotnet test
-  - dotnet build --configuration Release
