@@ -1,13 +1,13 @@
 dist: trusty
 addons:
-  snaps:
-    - name: dotnet-sdk
-      confinement: classic
-      channel: latest/beta
   sonarcloud:
     organization: "ometeo"
     token:
       secure: travis encrypt d3e89d7fbd0742be6e60472a214beffe580acde1
+  snaps:
+    - name: dotnet-sdk
+      confinement: classic
+      channel: latest/beta
 
 matrix:
   include:
