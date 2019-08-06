@@ -9,7 +9,6 @@ matrix:
   include:
     - language: csharp
       mono: none
-      dotnet: 3.0.0
       solution: ./SuperBack/SuperBack.sln
       sudo: required
       script:
