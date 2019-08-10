@@ -1,5 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using SuperBack.Sensor;
+using System;
+using System.Collections.Generic;
 
 namespace SuperBackUnitTest
 {
@@ -13,24 +16,40 @@ namespace SuperBackUnitTest
         public void SensorDataCreationTest()
         {
             // Integer value.
-            SensorData<int> intData = new SensorData<int>("Int data", 42);
+            SensorData intData = new SensorData("Int data", 42);
             Assert.AreEqual(42, intData.Value, "Value of intData should be 42");
+            Assert.AreEqual(typeof(int), intData.Type, "Type of intData should be int32");
             Assert.AreEqual("Int data", intData.Name, "Name of intData should be \"Int data\"");
 
             // Double value.
-            SensorData<double> doubleData = new SensorData<double>("Double data", 152.0);
+            SensorData doubleData = new SensorData("Double data", 152.0);
             Assert.AreEqual(152.0, doubleData.Value, "Value of doubleData should be 152.0");
+            Assert.AreEqual(typeof(double), doubleData.Type, "Type of doubleData should be double");
 
             // String value.
-            SensorData<string> stringData = new SensorData<string>("String data", "Hello from unit test");
+            SensorData stringData = new SensorData("String data", "Hello from unit test");
             Assert.AreEqual("Hello from unit test", stringData.Value, "Value of stringData should be \"Hello from unit test\"");
+            Assert.AreEqual(typeof(string), stringData.Type, "Type of stringData should be string");
 
             // Boolean value.
-            SensorData<bool> boolData = new SensorData<bool>("Bool data", true);
+            SensorData boolData = new SensorData("Bool data", true);
             Assert.AreEqual(true, boolData.Value, "Value of boolData should be true");
+            Assert.AreEqual(typeof(bool), boolData.Type, "Type of boolData should be bool");
+
 
             boolData.Value = false;
             Assert.AreEqual(false, boolData.Value, "Value of boolData should be false");
-        }       
+        }
+
+        [TestMethod, TestCategory("Sensor")]
+        public void SensorCreationTest()
+        {
+            Sensor sensor = new Sensor("Sensor #1");
+            SensorData sensorData = new SensorData("Count", -15);
+            sensor.Data.Add(sensorData);
+            Assert.AreEqual("Sensor #1", sensor.Name, "Name of sensor should be \"Sensor #1\"");
+            Assert.AreEqual(1, sensor.Data.Count, "Sensor should have 1 data value");
+            Assert.AreEqual(-15, sensor.Data[0].Value, "Value of data should be -15");           
+        }
     }
 }

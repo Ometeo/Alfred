@@ -16,7 +16,7 @@ namespace SuperBack.Sensor
         /// 
         /// The Guid type is choose to avoid painfully id attribution.
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid Id { get; internal set; }        
 
         /// <summary>
         /// Pretty name of the sensor.
@@ -26,8 +26,18 @@ namespace SuperBack.Sensor
         public string Name { get; set; }
 
         /// <summary>
-        /// Dictionnary of all values conained in the sensor.
+        /// List of all values conained in the sensor.
         /// </summary>
-        public Dictionary<string, SensorData<object>> Data { get; set; } = new Dictionary<string, SensorData<object>>();
+        public List<SensorData> Data { get; set; } = new List<SensorData>();
+
+        public Sensor() : this("Sensor")
+        {
+
+        }
+
+        public Sensor(string name)
+        {
+            Name = name;
+        }
     }
 }

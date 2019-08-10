@@ -1,21 +1,34 @@
-﻿namespace SuperBack.Sensor
+﻿using System;
+
+namespace SuperBack.Sensor
 {
     /// <summary>
     /// Stores data value for sensors.
     /// 
-    /// </summary>
-    /// <typeparam name="T">Value has no pre-defined types</typeparam>    
-    public class SensorData<T>
+    /// <para>Value is stored in object type for handling every possible types of value.</para>
+    /// 
+    /// <para>The type of the value is also stored.</para>
+    /// 
+    /// </summary>   
+    public class SensorData
     {
         /// <summary>
         /// Name of the data.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; }
 
         /// <summary>
         /// Value of the data.
         /// </summary>
-        public T Value { get; set; }
+        public object Value { get; set; }
+
+        /// <summary>
+        /// Type of the value.
+        /// </summary>
+        public Type Type
+        {
+            get { return Value.GetType(); }           
+        }
 
         /// <summary>
         /// Default constructor.
@@ -34,7 +47,7 @@
         /// </summary>
         /// <param name="name">The name of the data.</param>
         /// <param name="initialValue">The initial value of the data.</param>
-        public SensorData(string name, T initialValue)
+        public SensorData(string name, object initialValue)
         {
             Name = name;
             Value = initialValue;
