@@ -51,5 +51,18 @@ namespace SuperBackUnitTest
             Assert.AreEqual(1, sensor.Data.Count, "Sensor should have 1 data value");
             Assert.AreEqual(-15, sensor.Data[0].Value, "Value of data should be -15");           
         }
+
+        [TestMethod, TestCategory("Sensor")]
+        public void SensorCopyTest()
+        {
+            Sensor sensor = new Sensor("Sensor #1");
+            SensorData sensorData = new SensorData("Count", -15);
+            sensor.Data.Add(sensorData);
+
+            Sensor copy = new Sensor(sensor);
+            Assert.AreEqual("Sensor #1", sensor.Name, "Name of sensor should be \"Sensor #1\"");
+            Assert.AreEqual(1, sensor.Data.Count, "Sensor should have 1 data value");
+            Assert.AreEqual(-15, sensor.Data[0].Value, "Value of data should be -15");
+        }
     }
 }

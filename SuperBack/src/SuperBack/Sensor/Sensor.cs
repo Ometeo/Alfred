@@ -30,7 +30,7 @@ namespace SuperBack.Sensor
         /// </summary>
         public List<SensorData> Data { get; set; } = new List<SensorData>();
 
-        public Sensor() : this("Sensor")
+        public Sensor() : this(string.Empty)
         {
 
         }
@@ -39,5 +39,12 @@ namespace SuperBack.Sensor
         {
             Name = name;
         }
+
+        public Sensor(Sensor sensorToClone)
+        {
+            Name = sensorToClone.Name;
+            Id = sensorToClone.Id;
+            Data = sensorToClone.Data; // Todo deep copy.           
+        }       
     }
 }
