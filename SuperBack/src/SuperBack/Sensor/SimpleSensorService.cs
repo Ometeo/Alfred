@@ -29,7 +29,7 @@ namespace SuperBack.Sensor
             if (null != newSensor)
             {
                 Sensor sensor = Read(newSensor.Id);
-                if (null == sensor)
+                if (sensor.Equals(Sensor.Null))
                 {
                     newSensor.Id = Guid.NewGuid();
                     sensors.Add(newSensor);
@@ -62,7 +62,12 @@ namespace SuperBack.Sensor
         /// <returns>Found sensor.</returns>
         public Sensor Read(Guid id)
         {
-            return sensors.FirstOrDefault(s => s.Id.Equals(id));
+            Sensor sensorToReturn = sensors.FirstOrDefault(s => s.Id.Equals(id));
+            if (null == sensorToReturn)
+            {
+                sensorToReturn = Sensor.Null;
+            }
+            return sensorToReturn;
         }
 
         /// <summary>
@@ -78,7 +83,7 @@ namespace SuperBack.Sensor
             if(null != updatedSensor)
             {
                 Sensor sensor = Read(id);
-                if (null != sensor)
+                if (!sensor.Equals(Sensor.Null))
                 {
                     sensor.Data = updatedSensor.Data;
                     sensor.Name = updatedSensor.Name;                    

@@ -96,7 +96,7 @@ namespace SuperBackUnitTest
             Guid id = Guid.NewGuid();
 
             Sensor sensor = sensorService.Read(id);
-            Assert.IsNull(sensor, "No sensor should be returned");
+            Assert.AreEqual(Sensor.Null, sensor, "No null sensor should be returned");
         }
 
         [TestMethod]

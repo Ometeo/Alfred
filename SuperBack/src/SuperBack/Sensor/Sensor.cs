@@ -10,6 +10,16 @@ namespace SuperBack.Sensor
     /// </summary>
     public class Sensor
     {
+        public static readonly Sensor Null = new NullSensor();
+
+        private class NullSensor : Sensor
+        {
+            public NullSensor() : base("Null Sensor")
+            {
+                
+            }
+        }
+
         /// <summary>
         /// Id of the sensor. 
         /// Needed to find it.
