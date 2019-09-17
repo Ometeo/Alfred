@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlfredUtilities;
+using System;
 using System.Collections.Generic;
 
 namespace SuperBack.Sensor
@@ -8,7 +9,7 @@ namespace SuperBack.Sensor
     /// 
     /// Stores all values of a sensor.
     /// </summary>
-    public class Sensor
+    public class Sensor : AlfredBase
     {
         public static readonly Sensor Null = new NullSensor();
 
@@ -55,6 +56,20 @@ namespace SuperBack.Sensor
             Name = sensorToClone.Name;
             Id = sensorToClone.Id;
             Data = sensorToClone.Data; // Todo deep copy.           
-        }       
+        }
+
+        protected override void DisposeManagedObjects()
+        {
+            Console.WriteLine("        * Dispose Managed objects for sensor");
+            foreach (SensorData sensorData in Data)
+            {
+                sensorData.Dispose();
+            }
+        }
+
+        protected override void DisposeUnmanagedObjects()
+        {
+            Console.WriteLine("        * Dispose Unmanaged objects for sensor");
+        }
     }
 }

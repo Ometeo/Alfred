@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 
 namespace SuperBack.Sensor
-{    
-    public interface ISensorService
+{
+    public interface ISensorService : IDisposable
     {
         IList<Sensor> Sensors { get;  }
 

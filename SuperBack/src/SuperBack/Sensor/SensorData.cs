@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlfredUtilities;
+using System;
 
 namespace SuperBack.Sensor
 {
@@ -10,7 +11,7 @@ namespace SuperBack.Sensor
     /// <para>The type of the value is also stored.</para>
     /// 
     /// </summary>   
-    public class SensorData
+    public class SensorData : AlfredBase
     {
         /// <summary>
         /// Name of the data.
@@ -51,6 +52,20 @@ namespace SuperBack.Sensor
         {
             Name = name;
             Value = initialValue;
+        }
+
+        protected override void DisposeManagedObjects()
+        {
+            Console.WriteLine("            * Dispose Managed objects for sensorData");
+            if(Value is IDisposable)
+            {
+                ((IDisposable)Value).Dispose();
+            }            
+        }
+
+        protected override void DisposeUnmanagedObjects()
+        {
+            Console.WriteLine("            * Dispose Unmanaged objects for sensorData");
         }
     }
 }

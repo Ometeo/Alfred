@@ -7,7 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Communications\**" />
+    <Compile Remove="Message\**" />
+    <EmbeddedResource Remove="Communications\**" />
+    <EmbeddedResource Remove="Message\**" />
+    <None Remove="Communications\**" />
+    <None Remove="Message\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AlfredUtilities\AlfredUtilities.csproj" />
   </ItemGroup>
 
 </Project>
