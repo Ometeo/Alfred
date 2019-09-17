@@ -6,7 +6,13 @@ namespace SuperBack
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Super Visor!");
+            using(MainApp app = new MainApp().Init())
+            {
+                Console.WriteLine("Alfred says : Welcome master.");
+                app.Run();
+            }
         }
+
+       
     }
 }

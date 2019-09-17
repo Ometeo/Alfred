@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlfredUtilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,7 +12,7 @@ namespace SuperBack.Sensor
     /// 
     /// 
     /// </summary>
-    public class SimpleSensorService : ISensorService
+    public class SimpleSensorService : AlfredBase, ISensorService
     {
         private List<Sensor> sensors = new List<Sensor>();
 
@@ -92,6 +93,20 @@ namespace SuperBack.Sensor
             }
 
             return false;
+        }
+
+        protected override void DisposeManagedObjects()
+        {
+            Console.WriteLine("    * Dispose Managed Objects in SensorService");
+            foreach (Sensor sensor in Sensors)
+            {
+                sensor.Dispose();
+            }
+        }
+
+        protected override void DisposeUnmanagedObjects()
+        {
+            Console.WriteLine("    * Dispose Unmanaged Objects in SensorService");
         }
     }
 }
