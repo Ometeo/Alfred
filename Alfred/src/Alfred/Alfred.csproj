@@ -4,6 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <AssemblyName>Alfred</AssemblyName>
+    <RootNamespace>Alfred</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
