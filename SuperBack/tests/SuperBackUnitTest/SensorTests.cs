@@ -1,8 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using SuperBack.Sensor;
-using System;
-using System.Collections.Generic;
 
 namespace SuperBackUnitTest
 {
