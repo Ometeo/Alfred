@@ -1,4 +1,6 @@
-﻿namespace AlfredPlugin
+﻿using AlfredUtilities.Messages;
+
+namespace AlfredPlugin
 {
     public interface IAlfredPlugin
     {
@@ -6,7 +8,7 @@
 
         bool Register();
 
-        void Init();
+        void Init(IMessageDispatcher messageDispatcher);
 
         void Update();
 

@@ -1,7 +1,8 @@
-﻿using System;
+﻿using AlfredUtilities.Sensors;
+using System;
 using System.Collections.Generic;
 
-namespace SuperBack.Sensor
+namespace Alfred.Sensors
 {
     public interface ISensorService : IDisposable
     {

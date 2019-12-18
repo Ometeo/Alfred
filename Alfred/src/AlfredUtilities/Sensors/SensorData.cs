@@ -1,7 +1,6 @@
-﻿using AlfredUtilities;
-using System;
+﻿using System;
 
-namespace SuperBack.Sensor
+namespace AlfredUtilities.Sensors
 {
     /// <summary>
     /// Stores data value for sensors.

@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SuperBack.Sensor;
+﻿using AlfredUtilities.Sensors;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SuperBackUnitTest
+namespace AlfredUnitTest
 {
     [TestClass]
     public class SensorTests

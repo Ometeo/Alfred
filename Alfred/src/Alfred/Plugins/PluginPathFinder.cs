@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using AlfredUtilities;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 
 namespace SuperBack.Plugins
 {
-    internal class PluginPathFinder : IPluginPathFinder
+    internal class PluginPathFinder : AlfredBase, IPluginPathFinder
     {
         IList<string> paths = new List<string>();
 
@@ -24,6 +26,16 @@ namespace SuperBack.Plugins
         public IList<string> PluginPaths()
         {
             return paths;
+        }
+
+        protected override void DisposeManagedObjects()
+        {
+            Console.WriteLine("    * Dispose Managed Objects in PluginPathFinder");
+        }
+
+        protected override void DisposeUnmanagedObjects()
+        {
+            Console.WriteLine("    * Dispose Unmanaged Objects in PluginPathFinder");
         }
     }
 }

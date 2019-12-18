@@ -1,9 +1,11 @@
 ﻿using AlfredUtilities;
+using AlfredUtilities.Messages;
+using AlfredUtilities.Sensors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SuperBack.Sensor
+namespace Alfred.Sensors
 {
     /// <summary>
     /// Simple implementation of the Sensor Service Interface.
@@ -12,11 +14,16 @@ namespace SuperBack.Sensor
     /// 
     /// 
     /// </summary>
-    public class SimpleSensorService : AlfredBase, ISensorService
+    public class SimpleSensorService : AlfredBase, ISensorService, IMessageListener
     {
         private List<Sensor> sensors = new List<Sensor>();
 
         public IList<Sensor> Sensors => sensors; // Todo make it read-only, sensors should be updated only by interface methods.
+
+        public SimpleSensorService()
+        {
+            
+        }
 
         /// <summary>
         /// Add a sensor to the sensors list.
@@ -108,5 +115,10 @@ namespace SuperBack.Sensor
         {
             Console.WriteLine("    * Dispose Unmanaged Objects in SensorService");
         }
+
+        public void Consume(Message message)
+        {
+            // blank           
+        }        
     }
 }

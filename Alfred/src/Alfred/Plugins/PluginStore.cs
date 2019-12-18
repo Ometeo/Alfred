@@ -1,4 +1,6 @@
 ﻿using AlfredPlugin;
+using AlfredUtilities;
+using AlfredUtilities.Messages;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,14 +10,16 @@ using System.Runtime.Loader;
 
 namespace SuperBack.Plugins
 {
-    internal class PluginStore : IPluginStore
+    internal class PluginStore : AlfredBase, IPluginStore
     {
         IEnumerable<IAlfredPlugin> plugins;
         IList<string> pluginsPath;
+        IMessageDispatcher messageDispatcher;
 
-        public PluginStore(IPluginPathFinder pluginPathFinder)
+        public PluginStore(IPluginPathFinder pluginPathFinder, IMessageDispatcher messageDispatcher)
         {
             pluginsPath = pluginPathFinder.PluginPaths();
+            this.messageDispatcher = messageDispatcher;
         }
 
         public void LoadPlugins()
@@ -38,6 +42,7 @@ namespace SuperBack.Plugins
                     IAlfredPlugin result = Activator.CreateInstance(type) as IAlfredPlugin;
                     if (null != result)
                     {
+                        result.Init(messageDispatcher);
                         ++count;
                         yield return result;
                     }
@@ -66,6 +71,16 @@ namespace SuperBack.Plugins
         IEnumerable<IAlfredPlugin> IPluginStore.Plugins()
         {
             return plugins;
+        }
+
+        protected override void DisposeManagedObjects()
+        {
+            Console.WriteLine("    * Dispose Managed Objects in PluginStore");
+        }
+
+        protected override void DisposeUnmanagedObjects()
+        {
+            Console.WriteLine("    * Dispose Unmanaged Objects in PluginStore");
         }
     }
 }

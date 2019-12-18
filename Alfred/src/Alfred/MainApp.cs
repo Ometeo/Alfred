@@ -1,18 +1,14 @@
-﻿using AlfredPlugin;
+﻿using Alfred.Messages;
+using Alfred.Sensors;
 using AlfredUtilities;
+using AlfredUtilities.Messages;
 using Autofac;
 using SuperBack.Plugins;
-using SuperBack.Sensor;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Loader;
 
 namespace SuperBack
 {
-    public class MainApp : AlfredBase
+    public class MainApp : AlfredBase, IMessageListener
     {
         private ContainerBuilder containerBuilder = null;
 
@@ -35,28 +31,31 @@ namespace SuperBack
         public MainApp Init()
         {
             Console.WriteLine("* Init Alfred.");
-            containerBuilder.RegisterType<PluginPathFinder>().As<IPluginPathFinder>();
-            containerBuilder.RegisterType<PluginStore>().As<IPluginStore>();
-            containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>();
-
-
+            containerBuilder.RegisterType<PluginPathFinder>().As<IPluginPathFinder>().SingleInstance();
+            containerBuilder.RegisterType<PluginStore>().As<IPluginStore>().SingleInstance();
+            containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>().SingleInstance();
+            containerBuilder.RegisterType<MessageDispatcher>().As<IMessageDispatcher>().SingleInstance();
+          
             Console.WriteLine("* Build Alfred DI container.");
             Value = containerBuilder.Build();
 
             scope = Value.BeginLifetimeScope();
+
+            IMessageDispatcher dispatcher = scope.Resolve<IMessageDispatcher>();
+
             Console.WriteLine("* Create Alfred sensor service.");
             SensorService = scope.Resolve<ISensorService>();
-
+            
             Console.WriteLine("* LoadPlugins.");
             var pluginStore = scope.Resolve<IPluginStore>();
-            pluginStore.LoadPlugins();           
+            pluginStore.LoadPlugins();
 
             return this;
         }
 
         public void Run()
         {
-                
+
         }
 
         protected override void DisposeManagedObjects()
@@ -69,6 +68,11 @@ namespace SuperBack
         protected override void DisposeUnmanagedObjects()
         {
             Console.WriteLine("* Dispose Unmanaged objects in main app");
+        }
+
+        public void Consume(Message message)
+        {
+            Console.WriteLine($"* Receive message on main app : {message.Topic}, {message.Content}");
         }
     }
 }
