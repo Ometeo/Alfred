@@ -8,7 +8,7 @@ namespace AlfredUnitTest
     [TestClass]
     public class SensorsServiceTests
     {
-        ISensorService sensorService;
+        private ISensorService sensorService;
 
         [TestInitialize]
         public void Init()
@@ -46,8 +46,10 @@ namespace AlfredUnitTest
             Sensor sensor = new Sensor("BatSensor2");
             Guid guid = sensorService.Add(sensor);
 
-            Sensor sensor2 = new Sensor(sensor);
-            sensor2.Name = "New sensor's name";
+            Sensor sensor2 = new Sensor(sensor)
+            {
+                Name = "New sensor's name"
+            };
 
             Guid guid2 = sensorService.Add(sensor2);
 
@@ -68,7 +70,7 @@ namespace AlfredUnitTest
             Guid guid2 = sensorService.Add(sensor2);
 
             Assert.AreNotEqual(guid, guid2, "Sensors id shouldn't be equals");
-            Assert.AreEqual(2, sensorService.Sensors.Count, "Service should have 1 sensor");            
+            Assert.AreEqual(2, sensorService.Sensors.Count, "Service should have 1 sensor");
         }
 
         [TestMethod]
@@ -126,6 +128,5 @@ namespace AlfredUnitTest
             Assert.IsTrue(result, "Update should work");
             Assert.AreEqual("Updated sensor", sensorFromService.Name, "Sensor name should have changed.");
         }
-
     }
 }

@@ -1,14 +1,18 @@
-﻿using AlfredPlugin;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace SuperBack.Plugins
+using AlfredPlugin;
+
+namespace Alfred.Plugins
 {
     internal interface IPluginStore
-    {        
+    {
         void LoadPlugins();
 
-        IEnumerable<IAlfredPlugin> Plugins();
+        IEnumerable<IAlfredPlugin> Plugins
+        {
+            get;
+        }
+
+        IEnumerable<string> PluginsName();
     }
 }

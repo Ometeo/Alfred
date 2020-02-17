@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AlfredUtilities.Messages
+﻿namespace AlfredUtilities.Messages
 {
     /// <summary>
     /// Interface for message dispatching.
-    /// 
+    ///
     /// <para>Plugin or other components can enqueue messages with topic on the dispatcher.</para>
     /// <para>Listeners of thoses topics receive the said messages.</para>
     /// </summary>
     public interface IMessageDispatcher
     {
         /// <summary>
-        /// Enqueue message on the dispatcher
+        /// Enqueue message on the dispatcher.
         /// </summary>
         /// <param name="message">Message to enqueue.</param>
         void EnqueueMessage(Message message);
 
         /// <summary>
-        /// Dequeue message on the dispatcher
-        /// </summary>        
+        /// Dequeue message on the dispatcher.
+        /// </summary>
         Message DequeueMessage();
 
         /// <summary>

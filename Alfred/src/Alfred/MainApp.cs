@@ -1,31 +1,70 @@
-﻿using Alfred.Messages;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Alfred.Messages;
+using Alfred.Plugins;
 using Alfred.Sensors;
+
 using AlfredUtilities;
 using AlfredUtilities.Messages;
+
 using Autofac;
-using SuperBack.Plugins;
-using System;
 
 namespace SuperBack
 {
     public class MainApp : AlfredBase, IMessageListener
     {
-        private ContainerBuilder containerBuilder = null;
+        #region Private Fields
 
-        public IContainer Value { get; private set; }
+        private readonly ContainerBuilder containerBuilder = null;
 
-        public ISensorService SensorService { get; private set; }
-        ILifetimeScope scope;
-
-        string[] pluginPaths = new string[]
+        private readonly string[] pluginPaths = new string[]
         {
             @"I:\Projects\DIY\HomeSupervisor\HomeSupervisor\SuperBack\FakePlugin\bin\Debug\netcoreapp3.0\FakePlugin.dll"
         };
+
+        private ILifetimeScope scope;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MainApp()
         {
             Console.WriteLine("* Create Alfred main app.");
             containerBuilder = new ContainerBuilder();
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public ISensorService SensorService
+        {
+            get; private set;
+        }
+
+        public IContainer Value
+        {
+            get; private set;
+        }
+
+        #endregion Public Properties
+
+        #region Internal Properties
+
+        internal IPluginStore PluginStore
+        {
+            get; private set;
+        }
+
+        #endregion Internal Properties
+
+        #region Public Methods
+
+        public void Consume(Message message)
+        {
+            Console.WriteLine($"* Receive message on main app : {message.Topic}, {message.Content}");
         }
 
         public MainApp Init()
@@ -35,28 +74,40 @@ namespace SuperBack
             containerBuilder.RegisterType<PluginStore>().As<IPluginStore>().SingleInstance();
             containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>().SingleInstance();
             containerBuilder.RegisterType<MessageDispatcher>().As<IMessageDispatcher>().SingleInstance();
-          
+
             Console.WriteLine("* Build Alfred DI container.");
             Value = containerBuilder.Build();
 
             scope = Value.BeginLifetimeScope();
 
-            IMessageDispatcher dispatcher = scope.Resolve<IMessageDispatcher>();
+            IMessageDispatcher dispatcher = scope.Resolve<IMessageDispatcher>();           
 
             Console.WriteLine("* Create Alfred sensor service.");
             SensorService = scope.Resolve<ISensorService>();
-            
+
             Console.WriteLine("* LoadPlugins.");
-            var pluginStore = scope.Resolve<IPluginStore>();
-            pluginStore.LoadPlugins();
+            PluginStore = scope.Resolve<IPluginStore>();
+            PluginStore.LoadPlugins();
+
+            IEnumerable<string> pluginsNames = PluginStore.PluginsName();
+            Console.WriteLine("* Plugins Loaded:");
+            pluginsNames.ToList().ForEach(name => Console.WriteLine($"    - {name}"));
 
             return this;
         }
 
         public void Run()
         {
-
+            //while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Q)
+            //{
+            //    Console.WriteLine(".");
+            //}
+            PluginStore.Plugins.ToList().ForEach(plugin => plugin.Update());
         }
+
+        #endregion Public Methods
+
+        #region Protected Methods
 
         protected override void DisposeManagedObjects()
         {
@@ -70,9 +121,6 @@ namespace SuperBack
             Console.WriteLine("* Dispose Unmanaged objects in main app");
         }
 
-        public void Consume(Message message)
-        {
-            Console.WriteLine($"* Receive message on main app : {message.Topic}, {message.Content}");
-        }
+        #endregion Protected Methods
     }
 }

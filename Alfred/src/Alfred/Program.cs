@@ -2,15 +2,13 @@
 
 namespace SuperBack
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
-            using (MainApp app = new MainApp().Init())
-            {
-                Console.WriteLine("Alfred says : Welcome master.");
-                app.Run();
-            }
-        }       
+            using MainApp app = new MainApp().Init();
+            Console.WriteLine("Alfred says : Welcome master.");
+            app.Run();
+        }
     }
 }

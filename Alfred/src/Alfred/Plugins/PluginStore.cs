@@ -8,19 +8,29 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace SuperBack.Plugins
+namespace Alfred.Plugins
 {
     internal class PluginStore : AlfredBase, IPluginStore
     {
-        IEnumerable<IAlfredPlugin> plugins;
-        IList<string> pluginsPath;
-        IMessageDispatcher messageDispatcher;
+        #region Private Fields
+
+        private readonly IMessageDispatcher messageDispatcher;
+        private readonly IList<string> pluginsPath;
+        private IEnumerable<IAlfredPlugin> plugins;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public PluginStore(IPluginPathFinder pluginPathFinder, IMessageDispatcher messageDispatcher)
         {
             pluginsPath = pluginPathFinder.PluginPaths();
             this.messageDispatcher = messageDispatcher;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void LoadPlugins()
         {
@@ -31,46 +41,47 @@ namespace SuperBack.Plugins
             }).ToList();
         }
 
+        /// <summary>
+        /// Todo copy list.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<IAlfredPlugin> IPluginStore.Plugins
+        {
+            get
+            {
+                return plugins;
+            }
+        }
+
+        public IEnumerable<string> PluginsName()
+        {
+            IEnumerable<string> toto = plugins.Select(plugin => plugin.Name);
+            return toto;
+        }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
         protected IEnumerable<IAlfredPlugin> CreatePlugin(Assembly pluginAssembly)
         {
             int count = 0;
 
             foreach (Type type in pluginAssembly.GetTypes())
             {
-                if (typeof(IAlfredPlugin).IsAssignableFrom(type))
+                if (typeof(IAlfredPlugin).IsAssignableFrom(type) && Activator.CreateInstance(type) is IAlfredPlugin result)
                 {
-                    IAlfredPlugin result = Activator.CreateInstance(type) as IAlfredPlugin;
-                    if (null != result)
-                    {
-                        result.Init(messageDispatcher);
-                        ++count;
-                        yield return result;
-                    }
+                    result.Init(messageDispatcher);
+                    ++count;
+                    yield return result;
                 }
             }
 
             if (0 == count)
             {
-                string availableTypes = string.Join(",", pluginAssembly.GetTypes().Select(t => t.FullName));
-                throw new ApplicationException(
+                throw new PluginNotFoundException(
                     $"AlfredPlugin not found in {pluginAssembly}");
             }
-        }
-
-        protected Assembly LoadPlugin(string pluginPath)
-        {
-            string pluginLocation = Path.GetFullPath(pluginPath.Replace('\\', Path.DirectorySeparatorChar));
-            AssemblyLoadContext loadContext = new AssemblyLoadContext(pluginLocation);
-            return loadContext.LoadFromAssemblyPath(pluginLocation);
-        }
-
-        /// <summary>
-        /// Todo copy list
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<IAlfredPlugin> IPluginStore.Plugins()
-        {
-            return plugins;
         }
 
         protected override void DisposeManagedObjects()
@@ -82,5 +93,14 @@ namespace SuperBack.Plugins
         {
             Console.WriteLine("    * Dispose Unmanaged Objects in PluginStore");
         }
+
+        protected Assembly LoadPlugin(string pluginPath)
+        {
+            string pluginLocation = Path.GetFullPath(pluginPath.Replace('\\', Path.DirectorySeparatorChar));
+            AssemblyLoadContext loadContext = new AssemblyLoadContext(pluginLocation);
+            return loadContext.LoadFromAssemblyPath(pluginLocation);
+        }
+
+        #endregion Protected Methods
     }
 }

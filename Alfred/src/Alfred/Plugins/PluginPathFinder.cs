@@ -5,16 +5,16 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 
-namespace SuperBack.Plugins
+namespace Alfred.Plugins
 {
     internal class PluginPathFinder : AlfredBase, IPluginPathFinder
     {
-        IList<string> paths = new List<string>();
+        private readonly IList<string> paths = new List<string>();
 
         public PluginPathFinder()
         {
             string basePath = ConfigurationManager.AppSettings["pluginsPath"];
-            if(Directory.Exists(basePath))
+            if (Directory.Exists(basePath))
             {
                 foreach (string pluginPath in Directory.GetFiles(basePath).Where(path => Path.GetExtension(path).Equals(".dll")))
                 {

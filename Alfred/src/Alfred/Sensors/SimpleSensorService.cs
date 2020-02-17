@@ -9,25 +9,30 @@ namespace Alfred.Sensors
 {
     /// <summary>
     /// Simple implementation of the Sensor Service Interface.
-    /// 
+    ///
     /// <para>Use GUID for attributing Id's of sensors.</para>
-    /// 
-    /// 
+    ///
+    ///
     /// </summary>
     public class SimpleSensorService : AlfredBase, ISensorService, IMessageListener
     {
-        private List<Sensor> sensors = new List<Sensor>();
+        private readonly List<Sensor> sensors = new List<Sensor>();
 
         public IList<Sensor> Sensors => sensors; // Todo make it read-only, sensors should be updated only by interface methods.
 
-        public SimpleSensorService()
+        private readonly IMessageDispatcher dispatcher;
+
+        public SimpleSensorService(IMessageDispatcher dispatcher)
         {
-            
+            this.dispatcher = dispatcher;
+            dispatcher.Register("NewSensor", this);
+            dispatcher.Register("UpdateSensor", this);
+            dispatcher.Register("ReadSensor", this);
         }
 
         /// <summary>
         /// Add a sensor to the sensors list.
-        /// 
+        ///
         /// <para>If the list already contains a sensor with the same id it is replaced by the new one (update).</para>
         /// </summary>
         /// <param name="newSensor">Sensor to add.</param>
@@ -44,7 +49,7 @@ namespace Alfred.Sensors
                 }
                 else
                 {
-                    Update(sensor.Id, newSensor);                   
+                    Update(sensor.Id, newSensor);
                 }
 
                 return newSensor.Id;
@@ -88,15 +93,15 @@ namespace Alfred.Sensors
         /// <returns>True if update works, false otherwise.</returns>
         public bool Update(Guid id, Sensor updatedSensor)
         {
-            if(null != updatedSensor)
+            if (null != updatedSensor)
             {
                 Sensor sensor = Read(id);
                 if (!sensor.Equals(Sensor.Null))
                 {
                     sensor.Data = updatedSensor.Data;
-                    sensor.Name = updatedSensor.Name;                    
+                    sensor.Name = updatedSensor.Name;
                     return true;
-                }                
+                }
             }
 
             return false;
@@ -118,7 +123,31 @@ namespace Alfred.Sensors
 
         public void Consume(Message message)
         {
-            // blank           
-        }        
+            if (message.Topic == "NewSensor")
+            {
+                Guid id = Add(message.Content as Sensor);
+                Message newMassage = new Message
+                {
+                    Topic = "NewSensorResponse",
+                    Content = id
+                };
+
+                dispatcher.EnqueueMessage(newMassage);
+                dispatcher.DequeueMessage();
+            }
+
+            if (message.Topic == "ReadSensor")
+            {
+                Sensor sensor = Read((Guid)message.Content);
+                Message newMassage = new Message
+                {
+                    Topic = "ReadSensorResponse",
+                    Content = sensor
+                };
+
+                dispatcher.EnqueueMessage(newMassage);
+                dispatcher.DequeueMessage();
+            }
+        }
     }
 }
