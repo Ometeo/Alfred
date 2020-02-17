@@ -1,4 +1,6 @@
-﻿using Alfred.Sensors;
+﻿using Alfred.Messages;
+using Alfred.Sensors;
+using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -13,7 +15,8 @@ namespace AlfredUnitTest
         [TestInitialize]
         public void Init()
         {
-            sensorService = new SimpleSensorService();
+            IMessageDispatcher dispatcher = new MessageDispatcher();
+            sensorService = new SimpleSensorService(dispatcher);
         }
 
         [TestMethod, TestCategory("SensorService")]
