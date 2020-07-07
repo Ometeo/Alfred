@@ -1,18 +1,22 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SuperBack.Sensor;
+﻿using Alfred.Messages;
+using Alfred.Sensors;
+using AlfredUtilities.Messages;
+using AlfredUtilities.Sensors;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace SuperBackUnitTest
+namespace AlfredUnitTest
 {
     [TestClass]
     public class SensorsServiceTests
     {
-        ISensorService sensorService;
+        private ISensorService sensorService;
 
         [TestInitialize]
         public void Init()
         {
-            sensorService = new SimpleSensorService();
+            IMessageDispatcher dispatcher = new MessageDispatcher();
+            sensorService = new SimpleSensorService(dispatcher);
         }
 
         [TestMethod, TestCategory("SensorService")]
@@ -45,8 +49,10 @@ namespace SuperBackUnitTest
             Sensor sensor = new Sensor("BatSensor2");
             Guid guid = sensorService.Add(sensor);
 
-            Sensor sensor2 = new Sensor(sensor);
-            sensor2.Name = "New sensor's name";
+            Sensor sensor2 = new Sensor(sensor)
+            {
+                Name = "New sensor's name"
+            };
 
             Guid guid2 = sensorService.Add(sensor2);
 
@@ -67,7 +73,7 @@ namespace SuperBackUnitTest
             Guid guid2 = sensorService.Add(sensor2);
 
             Assert.AreNotEqual(guid, guid2, "Sensors id shouldn't be equals");
-            Assert.AreEqual(2, sensorService.Sensors.Count, "Service should have 1 sensor");            
+            Assert.AreEqual(2, sensorService.Sensors.Count, "Service should have 1 sensor");
         }
 
         [TestMethod]
@@ -125,6 +131,5 @@ namespace SuperBackUnitTest
             Assert.IsTrue(result, "Update should work");
             Assert.AreEqual("Updated sensor", sensorFromService.Name, "Sensor name should have changed.");
         }
-
     }
 }

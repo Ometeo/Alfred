@@ -4,6 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <AssemblyName>Alfred</AssemblyName>
+    <RootNamespace>Alfred</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,10 +20,18 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AlfredUtilities\AlfredUtilities.csproj" />
+    <ProjectReference Include="..\AlfredPlugin\AlfredPlugin.csproj" />
+    <ProjectReference Include="..\AlfredUtilities\AlfredUtilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

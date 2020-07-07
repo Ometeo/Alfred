@@ -1,10 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using SuperBack.Sensor;
-using System;
-using System.Collections.Generic;
+﻿using AlfredUtilities.Sensors;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SuperBackUnitTest
+namespace AlfredUnitTest
 {
     [TestClass]
     public class SensorTests
@@ -36,7 +33,6 @@ namespace SuperBackUnitTest
             Assert.AreEqual(true, boolData.Value, "Value of boolData should be true");
             Assert.AreEqual(typeof(bool), boolData.Type, "Type of boolData should be bool");
 
-
             boolData.Value = false;
             Assert.AreEqual(false, boolData.Value, "Value of boolData should be false");
         }
@@ -49,7 +45,7 @@ namespace SuperBackUnitTest
             sensor.Data.Add(sensorData);
             Assert.AreEqual("Sensor #1", sensor.Name, "Name of sensor should be \"Sensor #1\"");
             Assert.AreEqual(1, sensor.Data.Count, "Sensor should have 1 data value");
-            Assert.AreEqual(-15, sensor.Data[0].Value, "Value of data should be -15");           
+            Assert.AreEqual(-15, sensor.Data[0].Value, "Value of data should be -15");
         }
 
         [TestMethod, TestCategory("Sensor")]
@@ -60,9 +56,9 @@ namespace SuperBackUnitTest
             sensor.Data.Add(sensorData);
 
             Sensor copy = new Sensor(sensor);
-            Assert.AreEqual("Sensor #1", sensor.Name, "Name of sensor should be \"Sensor #1\"");
-            Assert.AreEqual(1, sensor.Data.Count, "Sensor should have 1 data value");
-            Assert.AreEqual(-15, sensor.Data[0].Value, "Value of data should be -15");
+            Assert.AreEqual("Sensor #1", copy.Name, "Name of sensor should be \"Sensor #1\"");
+            Assert.AreEqual(1, copy.Data.Count, "Sensor should have 1 data value");
+            Assert.AreEqual(-15, copy.Data[0].Value, "Value of data should be -15");
         }
     }
 }

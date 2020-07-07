@@ -4,7 +4,7 @@ namespace AlfredUtilities
 {
     public abstract class AlfredBase : IDisposable
     {
-        bool disposed = false;
+        private bool disposed = false;
 
         // Public implementation of Dispose pattern callable by consumers.
         public void Dispose()
@@ -16,24 +16,25 @@ namespace AlfredUtilities
         // Protected implementation of Dispose pattern.
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed)
-                return;
-
-            if (disposing)
+            if (!disposed)
             {
-                DisposeManagedObjects();
-            }
+                if (disposing)
+                {
+                    DisposeManagedObjects();
+                }
 
-            DisposeUnmanagedObjects();
-            disposed = true;
+                DisposeUnmanagedObjects();
+                disposed = true;
+            }
         }
 
         protected abstract void DisposeManagedObjects();
+
         protected abstract void DisposeUnmanagedObjects();
 
         ~AlfredBase()
         {
             Dispose(false);
-        }    
+        }
     }
 }

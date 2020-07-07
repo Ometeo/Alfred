@@ -1,8 +1,7 @@
-﻿using AlfredUtilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace SuperBack.Sensor
+namespace AlfredUtilities.Sensors
 {
     /// <summary>
     /// Defines what a sensor is.
@@ -27,7 +26,7 @@ namespace SuperBack.Sensor
         /// 
         /// The Guid type is choose to avoid painfully id attribution.
         /// </summary>
-        public Guid Id { get; internal set; }        
+        public Guid Id { get; set; }        // todo : internal set to avoid plugins to change id.
 
         /// <summary>
         /// Pretty name of the sensor.
