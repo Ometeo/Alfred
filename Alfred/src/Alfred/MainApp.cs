@@ -70,10 +70,10 @@ namespace SuperBack
         public MainApp Init()
         {
             Console.WriteLine("* Init Alfred.");
-            containerBuilder.RegisterType<PluginPathFinder>().As<IPluginPathFinder>().SingleInstance();
-            containerBuilder.RegisterType<PluginStore>().As<IPluginStore>().SingleInstance();
-            containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>().SingleInstance();
-            containerBuilder.RegisterType<MessageDispatcher>().As<IMessageDispatcher>().SingleInstance();
+            _ = containerBuilder.RegisterType<PluginPathFinder>().As<IPluginPathFinder>().SingleInstance();
+            _ = containerBuilder.RegisterType<PluginStore>().As<IPluginStore>().SingleInstance();
+            _ = containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>().SingleInstance();
+            _ = containerBuilder.RegisterType<MessageDispatcher>().As<IMessageDispatcher>().SingleInstance();
 
             Console.WriteLine("* Build Alfred DI container.");
             Value = containerBuilder.Build();
