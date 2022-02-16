@@ -1,6 +1,9 @@
 ﻿using AlfredPlugin;
+
 using AlfredUtilities;
 using AlfredUtilities.Messages;
+using AlfredUtilities.Sensors;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,15 +20,17 @@ namespace Alfred.Plugins
         private readonly IMessageDispatcher messageDispatcher;
         private readonly IList<string> pluginsPath;
         private IEnumerable<IAlfredPlugin> plugins;
+        private readonly ISensorService sensorService;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public PluginStore(IPluginPathFinder pluginPathFinder, IMessageDispatcher messageDispatcher)
+        public PluginStore(IPluginPathFinder pluginPathFinder, IMessageDispatcher messageDispatcher, ISensorService sensorService)
         {
             pluginsPath = pluginPathFinder.PluginPaths();
             this.messageDispatcher = messageDispatcher;
+            this.sensorService = sensorService;
         }
 
         #endregion Public Constructors
@@ -71,7 +76,7 @@ namespace Alfred.Plugins
             {
                 if (typeof(IAlfredPlugin).IsAssignableFrom(type) && Activator.CreateInstance(type) is IAlfredPlugin result)
                 {
-                    result.Init(messageDispatcher);
+                    result.Init(messageDispatcher, sensorService);
                     ++count;
                     yield return result;
                 }

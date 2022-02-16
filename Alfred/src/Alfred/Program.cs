@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SuperBack
+namespace Alfred
 {
     internal static class Program
     {

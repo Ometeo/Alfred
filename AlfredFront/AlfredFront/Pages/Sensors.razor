@@ -1,0 +1,47 @@
+﻿@page "/sensors"
+
+<PageTitle>Sensors</PageTitle>
+
+@using AlfredFront.Data
+@using System.Collections.ObjectModel
+@using System.Collections.Specialized
+@inject SensorService SensorService
+
+<h1>Sensors</h1>
+
+@foreach (var sensor in SensorService.Sensors)
+{
+    <div>
+        <h3>@sensor.Name</h3>
+        @foreach (var data in sensor.Data)
+        {
+            <div>@data.Name : @data.Value</div>
+        }
+    </div>
+}
+
+@code {
+
+    public ObservableCollection<Sensor> SensorsList { get; set; }
+
+    protected override void OnInitialized()
+    {
+        SensorsList = new ObservableCollection<Sensor>();
+        SensorService.SensorsUdpated += SensorCollectionChanged;
+    }
+
+
+    //protected override void OnAfterRender(bool firstRender)
+    //{
+    //    base.OnAfterRender(firstRender);
+    //}
+
+    protected void SensorCollectionChanged(object? sender, EventArgs e)
+    {
+       InvokeAsync(() =>
+                {
+
+                    StateHasChanged();
+                });
+    }
+}

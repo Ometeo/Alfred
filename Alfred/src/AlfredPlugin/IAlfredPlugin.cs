@@ -1,4 +1,5 @@
 ﻿using AlfredUtilities.Messages;
+using AlfredUtilities.Sensors;
 
 namespace AlfredPlugin
 {
@@ -8,7 +9,7 @@ namespace AlfredPlugin
 
         bool Register();
 
-        void Init(IMessageDispatcher messageDispatcher);
+        void Init(IMessageDispatcher messageDispatcher, ISensorService sensorService);
 
         void Update();
 

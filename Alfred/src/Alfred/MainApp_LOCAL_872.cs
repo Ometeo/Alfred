@@ -1,30 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Alfred.Messages;
 using Alfred.Plugins;
 using Alfred.Sensors;
 
-using AlfredFrontInterface;
-
 using AlfredUtilities;
 using AlfredUtilities.Messages;
-using AlfredUtilities.Sensors;
 
 using Autofac;
 
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-
-namespace Alfred
+namespace SuperBack
 {
     public class MainApp : AlfredBase, IMessageListener
     {
         #region Private Fields
 
         private readonly ContainerBuilder containerBuilder = null;
+
+        private readonly string[] pluginPaths = new string[]
+        {
+            @"I:\Projects\DIY\HomeSupervisor\HomeSupervisor\SuperBack\FakePlugin\bin\Debug\netcoreapp3.0\FakePlugin.dll"
+        };
 
         private ILifetimeScope scope;
 
@@ -61,11 +58,6 @@ namespace Alfred
             get; private set;
         }
 
-        internal IFrontCommunicator<Sensor> FrontCommunicator
-        {
-            get;
-            private set;
-        }
         #endregion Internal Properties
 
         #region Public Methods
@@ -78,24 +70,20 @@ namespace Alfred
         public MainApp Init()
         {
             Console.WriteLine("* Init Alfred.");
-            _ = containerBuilder.RegisterType<PluginPathFinder>().As<IPluginPathFinder>().SingleInstance();
-            _ = containerBuilder.RegisterType<PluginStore>().As<IPluginStore>().SingleInstance();
-            _ = containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>().SingleInstance();
-            _ = containerBuilder.RegisterType<MessageDispatcher>().As<IMessageDispatcher>().SingleInstance();
-            _ = containerBuilder.RegisterType(typeof(RabbitMQFrontCommunicator)).As(typeof(IFrontCommunicator<Sensor>)).SingleInstance();
+            containerBuilder.RegisterType<PluginPathFinder>().As<IPluginPathFinder>().SingleInstance();
+            containerBuilder.RegisterType<PluginStore>().As<IPluginStore>().SingleInstance();
+            containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>().SingleInstance();
+            containerBuilder.RegisterType<MessageDispatcher>().As<IMessageDispatcher>().SingleInstance();
 
             Console.WriteLine("* Build Alfred DI container.");
             Value = containerBuilder.Build();
 
             scope = Value.BeginLifetimeScope();
 
-            FrontCommunicator = scope.Resolve<IFrontCommunicator<Sensor>>();
-
-            IMessageDispatcher dispatcher = scope.Resolve<IMessageDispatcher>();
+            IMessageDispatcher dispatcher = scope.Resolve<IMessageDispatcher>();           
 
             Console.WriteLine("* Create Alfred sensor service.");
             SensorService = scope.Resolve<ISensorService>();
-            SensorService.SensorChanged += SensorService_SensorChanged;
 
             Console.WriteLine("* LoadPlugins.");
             PluginStore = scope.Resolve<IPluginStore>();
@@ -104,21 +92,17 @@ namespace Alfred
             IEnumerable<string> pluginsNames = PluginStore.PluginsName();
             Console.WriteLine("* Plugins Loaded:");
             pluginsNames.ToList().ForEach(name => Console.WriteLine($"    - {name}"));
-           
-            return this;
-        }
 
-        private void SensorService_SensorChanged(object sender, Sensor e)
-        {
-            FrontCommunicator.Send(e);
+            return this;
         }
 
         public void Run()
         {
-            while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Q)
-            {
-                PluginStore.Plugins.ToList().ForEach(plugin => plugin.Update());
-            }
+            //while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Q)
+            //{
+            //    Console.WriteLine(".");
+            //}
+            PluginStore.Plugins.ToList().ForEach(plugin => plugin.Update());
         }
 
         #endregion Public Methods

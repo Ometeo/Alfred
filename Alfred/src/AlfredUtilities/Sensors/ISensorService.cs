@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using AlfredUtilities.Messages;
-using AlfredUtilities.Sensors;
 
-namespace Alfred.Sensors
+namespace AlfredUtilities.Sensors
 {
     public interface ISensorService : IDisposable
     {
@@ -19,5 +17,7 @@ namespace Alfred.Sensors
         Sensor Read(Guid id);
 
         bool Delete(Guid id);
+
+        event EventHandler<Sensor> SensorChanged;        
     }
 }

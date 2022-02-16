@@ -22,6 +22,8 @@ namespace Alfred.Sensors
 
         private readonly IMessageDispatcher dispatcher;
 
+        public event EventHandler<Sensor> SensorChanged;
+
         public SimpleSensorService(IMessageDispatcher dispatcher)
         {
             this.dispatcher = dispatcher;
@@ -46,11 +48,13 @@ namespace Alfred.Sensors
                 {
                     newSensor.Id = Guid.NewGuid();
                     sensors.Add(newSensor);
+                    SensorChanged(this, newSensor);
                 }
                 else
                 {
                     Update(sensor.Id, newSensor);
                 }
+
 
                 return newSensor.Id;
             }
@@ -100,6 +104,7 @@ namespace Alfred.Sensors
                 {
                     sensor.Data = updatedSensor.Data;
                     sensor.Name = updatedSensor.Name;
+                    SensorChanged(this, sensor);
                     return true;
                 }
             }

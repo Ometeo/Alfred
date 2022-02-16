@@ -10,6 +10,7 @@ namespace FakePlugin
         public string Name => "Fake plugin";
 
         private IMessageDispatcher MessageDispatcher { get; set; }
+        private ISensorService SensorService { get; set; }
 
         bool created = false;
 
@@ -17,44 +18,46 @@ namespace FakePlugin
 
         public void Consume(Message message)
         {
-            if ("NewSensorResponse" == message.Topic)
-            {
-                Guid guid = (Guid)message.Content;
-                Message readMessage = new Message()
-                {
-                    Topic = "ReadSensor",
-                    Content = guid
-                };
+            //if ("NewSensorResponse" == message.Topic)
+            //{
+            //    Guid guid = (Guid)message.Content;
+            //    Message readMessage = new Message()
+            //    {
+            //        Topic = "ReadSensor",
+            //        Content = guid
+            //    };
 
-                MessageDispatcher.EnqueueMessage(readMessage);
-                MessageDispatcher.DequeueMessage();
-            }
-            else if ("ReadSensorResponse" == message.Topic)
-            {
-                localSensor = message.Content as Sensor;
-            }
-            else if ("UpdateSensorResponse" == message.Topic)
-            {
-                if((bool)message.Content)
-                {
-                    Message readMessage = new Message()
-                    {
-                        Topic = "ReadSensor",
-                        Content = localSensor.Id
-                    };
+            //    MessageDispatcher.EnqueueMessage(readMessage);
+            //    MessageDispatcher.DequeueMessage();
+            //}
+            //else if ("ReadSensorResponse" == message.Topic)
+            //{
+            //    localSensor = message.Content as Sensor;
+            //}
+            //else if ("UpdateSensorResponse" == message.Topic)
+            //{
+            //    if((bool)message.Content)
+            //    {
+            //        Message readMessage = new Message()
+            //        {
+            //            Topic = "ReadSensor",
+            //            Content = localSensor.Id
+            //        };
 
-                    MessageDispatcher.EnqueueMessage(readMessage);
-                    MessageDispatcher.DequeueMessage();
-                }
-            }
+            //        MessageDispatcher.EnqueueMessage(readMessage);
+            //        MessageDispatcher.DequeueMessage();
+            //    }
+            //}
         }
 
-        public void Init(IMessageDispatcher messageDispatcher)
+        public void Init(IMessageDispatcher messageDispatcher, ISensorService sensorService)
         {
-            MessageDispatcher = messageDispatcher;
-            MessageDispatcher.Register("NewSensorResponse", this);
-            MessageDispatcher.Register("UpdateSensorResponse", this);
-            MessageDispatcher.Register("ReadSensorResponse", this);
+            //MessageDispatcher = messageDispatcher;         
+            //MessageDispatcher.Register("NewSensorResponse", this);
+            //MessageDispatcher.Register("UpdateSensorResponse", this);
+            //MessageDispatcher.Register("ReadSensorResponse", this);
+
+            SensorService = sensorService;
         }
 
         public bool Register()
@@ -69,28 +72,20 @@ namespace FakePlugin
             if (!created)
             {
                 Sensor sensor = new Sensor("toto");
-                sensor.Data.Add(new SensorData("value", 42));
+                sensor.Data.Add(new SensorData("counter", 42));
 
-                message = new Message()
-                {
-                    Topic = "NewSensor",
-                    Content = sensor
-                };
+                sensor.Id = SensorService.Add(sensor);
+                created = true;
+                localSensor = sensor;
             }
             else
             {
                 int value = (int)localSensor.Data[0].Value;
                 localSensor.Data[0].Value = ++value;
 
-                message = new Message()
-                {
-                    Topic = "UpdateSensor",
-                    Content = localSensor
-                };
-            }
+                SensorService.Update(localSensor.Id, localSensor);
 
-            MessageDispatcher.EnqueueMessage(message);
-            MessageDispatcher.DequeueMessage();
+            }
         }
     }
 }

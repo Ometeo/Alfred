@@ -78,11 +78,18 @@ namespace Alfred
         public MainApp Init()
         {
             Console.WriteLine("* Init Alfred.");
+<<<<<<< Updated upstream
+            containerBuilder.RegisterType<PluginPathFinder>().As<IPluginPathFinder>().SingleInstance();
+            containerBuilder.RegisterType<PluginStore>().As<IPluginStore>().SingleInstance();
+            containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>().SingleInstance();
+            containerBuilder.RegisterType<MessageDispatcher>().As<IMessageDispatcher>().SingleInstance();
+=======
             _ = containerBuilder.RegisterType<PluginPathFinder>().As<IPluginPathFinder>().SingleInstance();
             _ = containerBuilder.RegisterType<PluginStore>().As<IPluginStore>().SingleInstance();
             _ = containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>().SingleInstance();
             _ = containerBuilder.RegisterType<MessageDispatcher>().As<IMessageDispatcher>().SingleInstance();
             _ = containerBuilder.RegisterType(typeof(RabbitMQFrontCommunicator)).As(typeof(IFrontCommunicator<Sensor>)).SingleInstance();
+>>>>>>> Stashed changes
 
             Console.WriteLine("* Build Alfred DI container.");
             Value = containerBuilder.Build();
