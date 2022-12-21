@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AlfredPlugin\AlfredPlugin.csproj">
+    <ProjectReference Include="..\..\AlfredPlugin\AlfredPlugin.csproj">
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
