@@ -20,7 +20,7 @@
         /// Null message.
         /// </summary>
         public static readonly Message Null = new NullMessage();
-        private class NullMessage : Message
+        private sealed class NullMessage : Message
         {
             public NullMessage() : base()
             {

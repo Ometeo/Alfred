@@ -12,7 +12,7 @@ namespace AlfredUtilities.Sensors
     {
         public static readonly Sensor Null = new NullSensor();
 
-        private class NullSensor : Sensor
+        private sealed class NullSensor : Sensor
         {
             public NullSensor() : base("Null Sensor")
             {
@@ -41,8 +41,7 @@ namespace AlfredUtilities.Sensors
         public List<SensorData> Data { get; set; } = new List<SensorData>();
 
         public Sensor() : this(string.Empty)
-        {
-
+        {            
         }
 
         public Sensor(string name)
