@@ -1,23 +1,21 @@
 dist: xenial
 addons:
   snaps:
-    - name: dotnet-sdk
-      confinement: classic
-      channel: latest/beta
-
+  - name: dotnet-sdk
+    confinement: classic
+    channel: latest/beta
+      
 matrix:
   include:
-    - language: csharp
-      mono: none
-      dotnet: 6.0
-      solution: ./Alfred/Alfred.sln
-      sudo: required
-      script:
-        - sudo snap alias dotnet-sdk.dotnet dotnet
-        - cd Alfred
-        - dotnet restore
-        - dotnet build --configuration Debug
-        - dotnet test
-        - dotnet build --configuration Release
-
-
+  - language: csharp
+    mono: none
+    dotnet: 6.0
+    solution: "./Alfred/Alfred.sln"
+    sudo: required
+    script:
+    - sudo snap alias dotnet-sdk.dotnet dotnet
+    - cd Alfred
+    - dotnet restore
+    - dotnet build --configuration Debug
+    - dotnet test    
+    - dotnet build --configuration Release
