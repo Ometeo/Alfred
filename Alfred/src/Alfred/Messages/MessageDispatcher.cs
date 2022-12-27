@@ -5,19 +5,19 @@ namespace Alfred.Messages
 {
     public class MessageDispatcher : IMessageDispatcher
     {
-        private readonly Queue<Message> messages = new Queue<Message>();
-        private readonly object messageLock = new object();
+        private readonly Queue<Message> messages = new();
+        private readonly object messageLock = new();
 
-        private readonly Dictionary<string, HashSet<IMessageListener>> registeredListener = new Dictionary<string, HashSet<IMessageListener>>();
+        private readonly Dictionary<string, HashSet<IMessageListener>> registeredListener = new();
 
         public Message DequeueMessage()
         {
             Message message;
             lock (messageLock)
             {
-                message = messages.TryDequeue(out message) ? message : Message.Null;
+                message = messages.TryDequeue(out Message? tempMessage) ? tempMessage : Message.Null;
 
-                if (!Message.Null.Equals(message) && registeredListener.TryGetValue(message.Topic, out HashSet<IMessageListener> listeners))
+                if (!Message.Null.Equals(message) && registeredListener.TryGetValue(message.Topic, out HashSet<IMessageListener>? listeners) && listeners != null)
                 {
                     foreach (IMessageListener listener in listeners)
                     {
@@ -47,7 +47,7 @@ namespace Alfred.Messages
         /// </returns>
         public bool Register(string topic, IMessageListener listener)
         {
-            if (!registeredListener.TryGetValue(topic, out HashSet<IMessageListener> listeners))
+            if (!registeredListener.TryGetValue(topic, out HashSet<IMessageListener>? listeners))
             {
                 listeners = new HashSet<IMessageListener>();
                 registeredListener.Add(topic, listeners);

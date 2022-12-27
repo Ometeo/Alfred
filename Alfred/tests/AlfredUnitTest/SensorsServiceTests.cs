@@ -4,6 +4,7 @@ using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AlfredUnitTest
 {
@@ -12,7 +13,13 @@ namespace AlfredUnitTest
     {
         private ISensorService sensorService;
 
+        public SensorsServiceTests()
+        {
+            Init();
+        }
+
         [TestInitialize]
+        [MemberNotNull(nameof(sensorService))]
         public void Init()
         {
             IMessageDispatcher dispatcher = new MessageDispatcher();
@@ -20,19 +27,26 @@ namespace AlfredUnitTest
         }
 
         [TestMethod, TestCategory("SensorService")]
+        
+        
         public void AddNullSensorTest()
         {
-            Sensor sensor = null;
+            // volontary warning to test unexpected behaviours.
+            Sensor? sensor = null;
+#pragma warning disable CS8604 // Existence possible d'un argument de référence null.
             Guid id = sensorService.Add(sensor);
+#pragma warning restore CS8604 // Existence possible d'un argument de référence null.
 
             Assert.AreEqual(Guid.Empty, id, "Returned id should be empty.");
             Assert.AreEqual(0, sensorService.Sensors.Count, "Service shouldn't have sensor.");
         }
 
+        // Todo : add another test to check with NullSensor. It should handle it as a null object. It is not the case for now.
+
         [TestMethod, TestCategory("SensorService")]
         public void AddNewSensorTest()
         {
-            Sensor sensor = new Sensor("BatSensor");
+            Sensor sensor = new("BatSensor");
 
             Guid id = sensorService.Add(sensor);
 

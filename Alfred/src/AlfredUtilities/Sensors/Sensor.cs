@@ -16,7 +16,7 @@ namespace AlfredUtilities.Sensors
         {
             public NullSensor() : base("Null Sensor")
             {
-                
+                Id = Guid.Empty;
             }
         }
 

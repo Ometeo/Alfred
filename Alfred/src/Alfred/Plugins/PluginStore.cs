@@ -16,7 +16,7 @@ namespace Alfred.Plugins
 
         private readonly IMessageDispatcher messageDispatcher;
         private readonly IList<string> pluginsPath;
-        private IEnumerable<IAlfredPlugin> plugins;
+        private IEnumerable<IAlfredPlugin> plugins = new List<IAlfredPlugin>();
 
         #endregion Private Fields
 
@@ -94,10 +94,10 @@ namespace Alfred.Plugins
             Console.WriteLine("    * Dispose Unmanaged Objects in PluginStore");
         }
 
-        protected Assembly LoadPlugin(string pluginPath)
+        protected static Assembly LoadPlugin(string pluginPath)
         {
             string pluginLocation = Path.GetFullPath(pluginPath.Replace('\\', Path.DirectorySeparatorChar));
-            AssemblyLoadContext loadContext = new AssemblyLoadContext(pluginLocation);
+            AssemblyLoadContext loadContext = new (pluginLocation);
             return loadContext.LoadFromAssemblyPath(pluginLocation);
         }
 

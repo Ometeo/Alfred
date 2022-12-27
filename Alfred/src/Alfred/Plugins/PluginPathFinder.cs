@@ -13,7 +13,7 @@ namespace Alfred.Plugins
 
         public PluginPathFinder()
         {
-            string basePath = ConfigurationManager.AppSettings["pluginsPath"];
+            string basePath = ConfigurationManager.AppSettings["pluginsPath"] ?? string.Empty;
             if (Directory.Exists(basePath))
             {
                 foreach (string pluginPath in Directory.GetFiles(basePath).Where(path => Path.GetExtension(path).Equals(".dll")))
