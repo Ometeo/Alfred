@@ -16,18 +16,23 @@ namespace Alfred.Sensors
     /// </summary>
     public class SimpleSensorService : AlfredBase, ISensorService, IMessageListener
     {
-        private readonly List<Sensor> sensors = new List<Sensor>();
+        private readonly List<Sensor> sensors = new();
 
-        public IList<Sensor> Sensors => sensors; // Todo make it read-only, sensors should be updated only by interface methods.
+        public IList<Sensor> Sensors => sensors; // Todo make it read-only, sensors should be updated only by interface methods. => frozen collection?
 
         private readonly IMessageDispatcher dispatcher;
 
         public SimpleSensorService(IMessageDispatcher dispatcher)
         {
             this.dispatcher = dispatcher;
-            dispatcher.Register("NewSensor", this);
-            dispatcher.Register("UpdateSensor", this);
-            dispatcher.Register("ReadSensor", this);
+            bool registerResult = dispatcher.Register("NewSensor", this);
+            registerResult &= dispatcher.Register("UpdateSensor", this);
+            registerResult &= dispatcher.Register("ReadSensor", this);
+
+            if (registerResult)
+            {
+                // todo log successful register.
+            }
         }
 
         /// <summary>
@@ -36,7 +41,7 @@ namespace Alfred.Sensors
         /// <para>If the list already contains a sensor with the same id it is replaced by the new one (update).</para>
         /// </summary>
         /// <param name="newSensor">Sensor to add.</param>
-        /// <returns>The new of the added sensor. <code>Guid.Empty</code> if <code>newSensor</code> is <code>null</code></returns>
+        /// <returns>The new of the added sensor. <see>Guid.Empty</see> if <code>newSensor</code> is <code>null</code></returns>
         public Guid Add(Sensor newSensor)
         {
             if (null != newSensor)
@@ -75,11 +80,7 @@ namespace Alfred.Sensors
         /// <returns>Found sensor.</returns>
         public Sensor Read(Guid id)
         {
-            Sensor sensorToReturn = sensors.FirstOrDefault(s => s.Id.Equals(id));
-            if (null == sensorToReturn)
-            {
-                sensorToReturn = Sensor.Null;
-            }
+            Sensor sensorToReturn = sensors.FirstOrDefault(s => s.Id.Equals(id)) ?? Sensor.Null;            
             return sensorToReturn;
         }
 
@@ -125,27 +126,27 @@ namespace Alfred.Sensors
         {
             if (message.Topic == "NewSensor")
             {
-                Guid id = Add(message.Content as Sensor);
-                Message newMassage = new Message
+                Guid id = Add(message.Content as Sensor ?? Sensor.Null);
+                Message newMessage = new()
                 {
                     Topic = "NewSensorResponse",
                     Content = id
                 };
 
-                dispatcher.EnqueueMessage(newMassage);
+                dispatcher.EnqueueMessage(newMessage);
                 dispatcher.DequeueMessage();
             }
 
             if (message.Topic == "ReadSensor")
             {
-                Sensor sensor = Read((Guid)message.Content);
-                Message newMassage = new Message
+                Sensor sensor = Read((Guid)(message?.Content ?? Guid.Empty));
+                Message newMessage = new()
                 {
                     Topic = "ReadSensorResponse",
                     Content = sensor
                 };
 
-                dispatcher.EnqueueMessage(newMassage);
+                dispatcher.EnqueueMessage(newMessage);
                 dispatcher.DequeueMessage();
             }
         }

@@ -9,12 +9,12 @@
         /// Topic of message.
         /// <para>Used for dispatch message to the correct listener.</para>
         /// </summary>
-        public string Topic { get; set; }
+        public string Topic { get; set; } = string.Empty;
 
         /// <summary>
         /// Content of the message.
         /// </summary>
-        public object Content { get; set; }
+        public object? Content { get; set; }
 
         /// <summary>
         /// Null message.

@@ -6,6 +6,7 @@
     <Platforms>AnyCPU;x64;x86</Platforms>
     <AssemblyName>Alfred</AssemblyName>
     <RootNamespace>Alfred</RootNamespace>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
