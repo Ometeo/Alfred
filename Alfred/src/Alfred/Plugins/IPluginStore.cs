@@ -4,7 +4,7 @@ using AlfredPlugin;
 
 namespace Alfred.Plugins
 {
-    internal interface IPluginStore
+    public interface IPluginStore
     {
         void LoadPlugins();
 

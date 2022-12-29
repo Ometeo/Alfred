@@ -8,7 +8,8 @@ using Alfred.Sensors;
 using AlfredUtilities;
 using AlfredUtilities.Messages;
 
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace SuperBack
 {
@@ -16,23 +17,25 @@ namespace SuperBack
     {
         #region Private Fields
 
-        private readonly ContainerBuilder containerBuilder = null;
-
         private readonly string[] pluginPaths = new string[]
         {
             @"I:\Projects\DIY\HomeSupervisor\HomeSupervisor\SuperBack\FakePlugin\bin\Debug\netcoreapp3.0\FakePlugin.dll"
         };
 
-        private ILifetimeScope scope;
-
         #endregion Private Fields
 
         #region Public Constructors
 
-        public MainApp()
+        public MainApp(ISensorService sensorService, IMessageDispatcher dispatcher, IPluginStore pluginStore)
         {
             Console.WriteLine("* Create Alfred main app.");
-            containerBuilder = new ContainerBuilder();
+            Console.WriteLine("* Create Alfred sensor service.");
+            SensorService = sensorService;
+
+            Console.WriteLine("* Create Plugin Store.");
+            PluginStore = pluginStore;
+            Console.WriteLine("* Create Message Dispatcher.");
+            Dispatcher = dispatcher;
         }
 
         #endregion Public Constructors
@@ -44,16 +47,16 @@ namespace SuperBack
             get; private set;
         }
 
-        public IContainer Value
-        {
-            get; private set;
-        }
-
         #endregion Public Properties
 
         #region Internal Properties
 
         internal IPluginStore PluginStore
+        {
+            get; private set;
+        }
+
+        internal IMessageDispatcher Dispatcher
         {
             get; private set;
         }
@@ -69,24 +72,8 @@ namespace SuperBack
 
         public MainApp Init()
         {
-            Console.WriteLine("* Init Alfred.");
-            _ = containerBuilder.RegisterType<PluginPathFinder>().As<IPluginPathFinder>().SingleInstance();
-            _ = containerBuilder.RegisterType<PluginStore>().As<IPluginStore>().SingleInstance();
-            _ = containerBuilder.RegisterType<SimpleSensorService>().As<ISensorService>().SingleInstance();
-            _ = containerBuilder.RegisterType<MessageDispatcher>().As<IMessageDispatcher>().SingleInstance();
-
-            Console.WriteLine("* Build Alfred DI container.");
-            Value = containerBuilder.Build();
-
-            scope = Value.BeginLifetimeScope();
-
-            IMessageDispatcher dispatcher = scope.Resolve<IMessageDispatcher>();           
-
-            Console.WriteLine("* Create Alfred sensor service.");
-            SensorService = scope.Resolve<ISensorService>();
-
+            Console.WriteLine("* Init Alfred.");                                             
             Console.WriteLine("* LoadPlugins.");
-            PluginStore = scope.Resolve<IPluginStore>();
             PluginStore.LoadPlugins();
 
             IEnumerable<string> pluginsNames = PluginStore.PluginsName();
@@ -111,9 +98,7 @@ namespace SuperBack
 
         protected override void DisposeManagedObjects()
         {
-            Console.WriteLine("* Dispose Managed objects in main app");
-            Value.Dispose();
-            scope.Dispose();
+            Console.WriteLine("* Dispose Managed objects in main app");        
         }
 
         protected override void DisposeUnmanagedObjects()
