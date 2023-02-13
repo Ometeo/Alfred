@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Generic;
 
 namespace AlfredUtilities.Sensors
@@ -57,8 +59,7 @@ namespace AlfredUtilities.Sensors
         }
 
         protected override void DisposeManagedObjects()
-        {
-            Console.WriteLine("        * Dispose Managed objects for sensor");
+        {            
             foreach (SensorData sensorData in Data)
             {
                 sensorData.Dispose();
@@ -67,7 +68,7 @@ namespace AlfredUtilities.Sensors
 
         protected override void DisposeUnmanagedObjects()
         {
-            Console.WriteLine("        * Dispose Unmanaged objects for sensor");
+            // Nothing to do.
         }
     }
 }

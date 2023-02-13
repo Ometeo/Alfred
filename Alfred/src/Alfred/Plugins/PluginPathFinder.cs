@@ -1,7 +1,9 @@
 ﻿using AlfredUtilities;
-using System;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 
@@ -11,9 +13,12 @@ namespace Alfred.Plugins
     {
         private readonly IList<string> paths = new List<string>();
 
-        public PluginPathFinder()
-        {
-            string basePath = ConfigurationManager.AppSettings["pluginsPath"] ?? string.Empty;
+        private readonly ILogger _logger;
+
+        public PluginPathFinder(ILoggerFactory loggerFactory, IConfiguration config)
+        {            
+            _logger = loggerFactory.CreateLogger<PluginPathFinder>();
+            string basePath = config.GetValue<string>("PluginsPath") ?? string.Empty;
             if (Directory.Exists(basePath))
             {
                 foreach (string pluginPath in Directory.GetFiles(basePath).Where(path => Path.GetExtension(path).Equals(".dll")))
@@ -30,12 +35,12 @@ namespace Alfred.Plugins
 
         protected override void DisposeManagedObjects()
         {
-            Console.WriteLine("    * Dispose Managed Objects in PluginPathFinder");
+            _logger.LogInformation("    * Dispose Managed Objects in PluginPathFinder");
         }
 
         protected override void DisposeUnmanagedObjects()
         {
-            Console.WriteLine("    * Dispose Unmanaged Objects in PluginPathFinder");
+            _logger.LogInformation("    * Dispose Unmanaged Objects in PluginPathFinder");
         }
     }
 }

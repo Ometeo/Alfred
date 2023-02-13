@@ -1,6 +1,9 @@
 ﻿using AlfredUtilities;
 using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
+
+using Microsoft.Extensions.Logging;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +15,6 @@ namespace Alfred.Sensors
     ///
     /// <para>Use GUID for attributing Id's of sensors.</para>
     ///
-    ///
     /// </summary>
     public class SimpleSensorService : AlfredBase, ISensorService, IMessageListener
     {
@@ -20,11 +22,13 @@ namespace Alfred.Sensors
 
         public IList<Sensor> Sensors => sensors; // Todo make it read-only, sensors should be updated only by interface methods. => frozen collection?
 
-        private readonly IMessageDispatcher dispatcher;
+        private readonly IMessageDispatcher _dispatcher;
+        private readonly ILogger _logger;
 
-        public SimpleSensorService(IMessageDispatcher dispatcher)
+        public SimpleSensorService(IMessageDispatcher dispatcher, ILoggerFactory loggerFactory)
         {
-            this.dispatcher = dispatcher;
+            _logger = loggerFactory.CreateLogger<SimpleSensorService>();
+            _dispatcher = dispatcher;
             bool registerResult = dispatcher.Register("NewSensor", this);
             registerResult &= dispatcher.Register("UpdateSensor", this);
             registerResult &= dispatcher.Register("ReadSensor", this);
@@ -110,7 +114,7 @@ namespace Alfred.Sensors
 
         protected override void DisposeManagedObjects()
         {
-            Console.WriteLine("    * Dispose Managed Objects in SensorService");
+            _logger.LogInformation("    * Dispose Managed Objects in SensorService");
             foreach (Sensor sensor in Sensors)
             {
                 sensor.Dispose();
@@ -119,7 +123,7 @@ namespace Alfred.Sensors
 
         protected override void DisposeUnmanagedObjects()
         {
-            Console.WriteLine("    * Dispose Unmanaged Objects in SensorService");
+            _logger.LogInformation("    * Dispose Unmanaged Objects in SensorService");
         }
 
         public void Consume(Message message)
@@ -133,8 +137,8 @@ namespace Alfred.Sensors
                     Content = id
                 };
 
-                dispatcher.EnqueueMessage(newMessage);
-                dispatcher.DequeueMessage();
+                _dispatcher.EnqueueMessage(newMessage);
+                _dispatcher.DequeueMessage();
             }
 
             if (message.Topic == "ReadSensor")
@@ -146,8 +150,8 @@ namespace Alfred.Sensors
                     Content = sensor
                 };
 
-                dispatcher.EnqueueMessage(newMessage);
-                dispatcher.DequeueMessage();
+                _dispatcher.EnqueueMessage(newMessage);
+                _dispatcher.DequeueMessage();
             }
         }
     }
