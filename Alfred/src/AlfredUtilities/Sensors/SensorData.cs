@@ -54,8 +54,7 @@ namespace AlfredUtilities.Sensors
         }
 
         protected override void DisposeManagedObjects()
-        {
-            Console.WriteLine("            * Dispose Managed objects for sensorData");
+        {            
             if(Value is IDisposable)
             {
                 ((IDisposable)Value).Dispose();
@@ -64,7 +63,7 @@ namespace AlfredUtilities.Sensors
 
         protected override void DisposeUnmanagedObjects()
         {
-            Console.WriteLine("            * Dispose Unmanaged objects for sensorData");
+            // Nothing to do.
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using AlfredPlugin;
 using AlfredUtilities;
 using AlfredUtilities.Messages;
+
+using Microsoft.Extensions.Logging;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,13 +20,15 @@ namespace Alfred.Plugins
         private readonly IMessageDispatcher messageDispatcher;
         private readonly IList<string> pluginsPath;
         private IEnumerable<IAlfredPlugin> plugins = new List<IAlfredPlugin>();
+        private readonly ILogger _logger;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public PluginStore(IPluginPathFinder pluginPathFinder, IMessageDispatcher messageDispatcher)
+        public PluginStore(IPluginPathFinder pluginPathFinder, IMessageDispatcher messageDispatcher, ILoggerFactory loggerFactory)
         {
+            _logger = loggerFactory.CreateLogger<PluginStore>();
             pluginsPath = pluginPathFinder.PluginPaths();
             this.messageDispatcher = messageDispatcher;
         }
@@ -86,12 +91,12 @@ namespace Alfred.Plugins
 
         protected override void DisposeManagedObjects()
         {
-            Console.WriteLine("    * Dispose Managed Objects in PluginStore");
+            _logger.LogInformation("    * Dispose Managed Objects in PluginStore");
         }
 
         protected override void DisposeUnmanagedObjects()
         {
-            Console.WriteLine("    * Dispose Unmanaged Objects in PluginStore");
+            _logger.LogInformation("    * Dispose Unmanaged Objects in PluginStore");
         }
 
         protected static Assembly LoadPlugin(string pluginPath)

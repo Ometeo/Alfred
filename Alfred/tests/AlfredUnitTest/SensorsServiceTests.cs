@@ -5,6 +5,10 @@ using AlfredUtilities.Sensors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Moq;
+using Castle.Core.Logging;
+using System.Xml.Serialization;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AlfredUnitTest
 {
@@ -22,13 +26,11 @@ namespace AlfredUnitTest
         [MemberNotNull(nameof(sensorService))]
         public void Init()
         {
-            IMessageDispatcher dispatcher = new MessageDispatcher();
-            sensorService = new SimpleSensorService(dispatcher);
+            IMessageDispatcher dispatcher = new MessageDispatcher();            
+            sensorService = new SimpleSensorService(dispatcher, new NullLoggerFactory());
         }
 
-        [TestMethod, TestCategory("SensorService")]
-        
-        
+        [TestMethod, TestCategory("SensorService")]              
         public void AddNullSensorTest()
         {
             // volontary warning to test unexpected behaviours.
