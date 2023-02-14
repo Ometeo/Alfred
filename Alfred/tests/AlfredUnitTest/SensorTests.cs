@@ -1,64 +1,64 @@
-﻿using AlfredUtilities.Sensors;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using FluentAssertions;
+using System;
+using Xunit;
+
+using AlfredUtilities.Sensors;
 
 namespace AlfredUnitTest
 {
-    [TestClass]
     public class SensorTests
     {
         /// <summary>
-        /// Test the correctness of instantiation for SensorData with several types.
+        /// Test the instanciation's correctness for SensorData with several types. The interresting point here is on the type checking.
         /// </summary>
-        [TestMethod, TestCategory("Sensor")]
-        public void SensorDataCreationTest()
+        [Theory]
+        [Trait("Category", "Sensor")]
+        [Trait("Category", "SensorData")]
+        [InlineData("Int data", 42, typeof(int))]
+        [InlineData("Double data", 152.3, typeof(double))]
+        [InlineData("String data", "Hello from unit test", typeof(string))]
+        [InlineData("Bool data", true, typeof(bool))]
+        [InlineData("Bool data", false, typeof(bool))]
+        public void SensorDataCreationTest(string name, object value, Type expectedType)
         {
-            // Integer value.
-            SensorData intData = new SensorData("Int data", 42);
-            Assert.AreEqual(42, intData.Value, "Value of intData should be 42");
-            Assert.AreEqual(typeof(int), intData.Type, "Type of intData should be int32");
-            Assert.AreEqual("Int data", intData.Name, "Name of intData should be \"Int data\"");
-
-            // Double value.
-            SensorData doubleData = new SensorData("Double data", 152.0);
-            Assert.AreEqual(152.0, doubleData.Value, "Value of doubleData should be 152.0");
-            Assert.AreEqual(typeof(double), doubleData.Type, "Type of doubleData should be double");
-
-            // String value.
-            SensorData stringData = new SensorData("String data", "Hello from unit test");
-            Assert.AreEqual("Hello from unit test", stringData.Value, "Value of stringData should be \"Hello from unit test\"");
-            Assert.AreEqual(typeof(string), stringData.Type, "Type of stringData should be string");
-
-            // Boolean value.
-            SensorData boolData = new SensorData("Bool data", true);
-            Assert.AreEqual(true, boolData.Value, "Value of boolData should be true");
-            Assert.AreEqual(typeof(bool), boolData.Type, "Type of boolData should be bool");
-
-            boolData.Value = false;
-            Assert.AreEqual(false, boolData.Value, "Value of boolData should be false");
+            SensorData data = new(name, value);
+            data.Value.Should().Be(value, $"value of the sensorData should be {value}");
+            data.Type.Should().Be(expectedType, $"as sensorData's value is {value}, its type should be {expectedType}");
+            data.Name.Should().Be(name);
         }
 
-        [TestMethod, TestCategory("Sensor")]
+        /// <summary>
+        /// Test the instanciation's correctness for Sensor.
+        /// </summary>
+        [Fact]
+        [Trait("Category", "Sensor")]
+        [Trait("Category", "SensorData")]
         public void SensorCreationTest()
         {
-            Sensor sensor = new Sensor("Sensor #1");
-            SensorData sensorData = new SensorData("Count", -15);
+            Sensor sensor = new ("Sensor #1");
+            SensorData sensorData = new ("Count", -15);
             sensor.Data.Add(sensorData);
-            Assert.AreEqual("Sensor #1", sensor.Name, "Name of sensor should be \"Sensor #1\"");
-            Assert.AreEqual(1, sensor.Data.Count, "Sensor should have 1 data value");
-            Assert.AreEqual(-15, sensor.Data[0].Value, "Value of data should be -15");
+            sensor.Name.Should().Be("Sensor #1");
+            sensor.Data.Should().HaveCount(1, "sensor have 1 sensor data");
+            sensor.Data[0].Value.Should().Be(-15);
         }
 
-        [TestMethod, TestCategory("Sensor")]
+        /// <summary>
+        /// Test the copy constructor.
+        /// </summary>
+        [Fact]
+        [Trait("Category", "Sensor")]
+        [Trait("Category", "SensorData")]
         public void SensorCopyTest()
         {
-            Sensor sensor = new Sensor("Sensor #1");
-            SensorData sensorData = new SensorData("Count", -15);
+            Sensor sensor = new ("Sensor #1");
+            SensorData sensorData = new("Count", -15);
             sensor.Data.Add(sensorData);
 
-            Sensor copy = new Sensor(sensor);
-            Assert.AreEqual("Sensor #1", copy.Name, "Name of sensor should be \"Sensor #1\"");
-            Assert.AreEqual(1, copy.Data.Count, "Sensor should have 1 data value");
-            Assert.AreEqual(-15, copy.Data[0].Value, "Value of data should be -15");
+            Sensor copy = new (sensor);
+            copy.Name.Should().Be("Sensor #1", "copy's name should be the same than the copied sensor");
+            copy.Data.Should().HaveCount(1, "the copy should have the same number of data");
+            copy.Data[0].Value.Should().Be(-15, "the data value of the copy should be the same than the copied one");
         }
     }
 }
