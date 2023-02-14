@@ -1,4 +1,4 @@
-name: SonarCloud
+name: BasicBuild
 on:
   push:
     branches:
