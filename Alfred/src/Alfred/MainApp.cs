@@ -8,10 +8,13 @@ using Alfred.Plugins;
 using Alfred.Sensors;
 using AlfredUtilities;
 using AlfredUtilities.Messages;
+using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Alfred
 {
-    public class MainApp : AlfredBase, IMessageListener
+    public class MainApp : AlfredBase, IHostedService, IMessageListener
     {
         #region Private Fields
 
@@ -90,13 +93,37 @@ namespace Alfred
             PluginStore.Plugins.ToList().ForEach(plugin => plugin.Update());
         }
 
+        private Timer _timer;
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Start main service");
+            Init();
+            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _timer.Change(Timeout.Infinite, 0);
+            return Task.CompletedTask;
+        }
+
+
+        private void DoWork(object state)
+        {
+            Run();
+        }
+
         #endregion Public Methods
 
         #region Protected Methods
 
         protected override void DisposeManagedObjects()
         {
-            _logger.LogInformation("* Dispose Managed objects in main app");        
+            _logger.LogInformation("* Dispose Managed objects in main app");    
+            _timer.Dispose();
         }
 
         protected override void DisposeUnmanagedObjects()

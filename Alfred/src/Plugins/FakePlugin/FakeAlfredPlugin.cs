@@ -1,7 +1,10 @@
 ﻿using AlfredPlugin;
+
 using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
+
 using System;
+using System.Linq;
 
 namespace FakePlugin
 {
@@ -35,7 +38,7 @@ namespace FakePlugin
             }
             else if ("UpdateSensorResponse" == message.Topic)
             {
-                if((bool)message.Content)
+                if ((bool)message.Content)
                 {
                     Message readMessage = new Message()
                     {
@@ -55,6 +58,20 @@ namespace FakePlugin
             MessageDispatcher.Register("NewSensorResponse", this);
             MessageDispatcher.Register("UpdateSensorResponse", this);
             MessageDispatcher.Register("ReadSensorResponse", this);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Sensor sensor = new Sensor($"Sensor_{i}");
+                sensor.Data.Add(new SensorData("value", 0));
+                Message message = new Message()
+                {
+                    Topic = "NewSensor",
+                    Content = sensor
+                };
+                MessageDispatcher.EnqueueMessage(message);
+                MessageDispatcher.DequeueMessage();
+            }
+
         }
 
         public bool Register()
@@ -63,34 +80,7 @@ namespace FakePlugin
         }
 
         public void Update()
-        {
-            Message message;
-
-            if (!created)
-            {
-                Sensor sensor = new Sensor("toto");
-                sensor.Data.Add(new SensorData("value", 42));
-
-                message = new Message()
-                {
-                    Topic = "NewSensor",
-                    Content = sensor
-                };
-            }
-            else
-            {
-                int value = (int)localSensor.Data[0].Value;
-                localSensor.Data[0].Value = ++value;
-
-                message = new Message()
-                {
-                    Topic = "UpdateSensor",
-                    Content = localSensor
-                };
-            }
-
-            MessageDispatcher.EnqueueMessage(message);
-            MessageDispatcher.DequeueMessage();
+        {            
         }
     }
 }
