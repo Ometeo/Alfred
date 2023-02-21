@@ -4,7 +4,6 @@ using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
 
 using System;
-using System.Linq;
 
 namespace FakePlugin
 {
@@ -12,9 +11,8 @@ namespace FakePlugin
     {
         public string Name => "Fake plugin";
 
-        private IMessageDispatcher MessageDispatcher { get; set; }
-
-        bool created = false;
+        private IMessageDispatcher? _messageDispatcher;
+        private readonly uint _sensorNumber = 10;
 
         Sensor localSensor = Sensor.Null;
 
@@ -23,14 +21,14 @@ namespace FakePlugin
             if ("NewSensorResponse" == message.Topic)
             {
                 Guid guid = (Guid)message.Content;
-                Message readMessage = new Message()
+                Message readMessage = new ()
                 {
                     Topic = "ReadSensor",
                     Content = guid
                 };
 
-                MessageDispatcher.EnqueueMessage(readMessage);
-                MessageDispatcher.DequeueMessage();
+                _messageDispatcher?.EnqueueMessage(readMessage);
+                _ = _messageDispatcher?.DequeueMessage();
             }
             else if ("ReadSensorResponse" == message.Topic)
             {
@@ -40,36 +38,36 @@ namespace FakePlugin
             {
                 if ((bool)message.Content)
                 {
-                    Message readMessage = new Message()
+                    Message readMessage = new ()
                     {
                         Topic = "ReadSensor",
                         Content = localSensor.Id
                     };
 
-                    MessageDispatcher.EnqueueMessage(readMessage);
-                    MessageDispatcher.DequeueMessage();
+                    _messageDispatcher?.EnqueueMessage(readMessage);
+                    _ = _messageDispatcher?.DequeueMessage();
                 }
             }
         }
 
         public void Init(IMessageDispatcher messageDispatcher)
         {
-            MessageDispatcher = messageDispatcher;
-            MessageDispatcher.Register("NewSensorResponse", this);
-            MessageDispatcher.Register("UpdateSensorResponse", this);
-            MessageDispatcher.Register("ReadSensorResponse", this);
+            _messageDispatcher = messageDispatcher;
+            _ = _messageDispatcher?.Register("NewSensorResponse", this);
+            _ = _messageDispatcher?.Register("UpdateSensorResponse", this);
+            _ = _messageDispatcher?.Register("ReadSensorResponse", this);
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < _sensorNumber; i++)
             {
-                Sensor sensor = new Sensor($"Sensor_{i}");
+                Sensor sensor = new ($"Sensor_{i}");
                 sensor.Data.Add(new SensorData("value", 0));
-                Message message = new Message()
+                Message message = new ()
                 {
                     Topic = "NewSensor",
                     Content = sensor
                 };
-                MessageDispatcher.EnqueueMessage(message);
-                MessageDispatcher.DequeueMessage();
+                _messageDispatcher?.EnqueueMessage(message);
+                _ = _messageDispatcher?.DequeueMessage();
             }
 
         }
@@ -80,7 +78,8 @@ namespace FakePlugin
         }
 
         public void Update()
-        {            
+        {    
+            // Empty for now.
         }
     }
 }

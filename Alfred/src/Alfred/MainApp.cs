@@ -19,6 +19,8 @@ namespace Alfred
         #region Private Fields
 
         private readonly ILogger _logger;
+        private readonly Timer _timer;
+        private readonly uint _period = 5000;
 
         #endregion Private Fields
 
@@ -37,6 +39,9 @@ namespace Alfred
             PluginStore = pluginStore;
             _logger.LogInformation("* Create Message Dispatcher.");
             Dispatcher = dispatcher;
+            _logger.LogInformation("* Init main app timer.");
+            _timer = new Timer(Run, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(_period));
+            _ = _timer.Change(Timeout.Infinite, 0);
         }
 
         #endregion Public Constructors
@@ -68,7 +73,7 @@ namespace Alfred
 
         public void Consume(Message message)
         {
-            _logger.LogTrace($"* Receive message on main app : {message.Topic}, {message.Content}");
+            _logger.LogTrace("* Receive message on main app : {}, {}", message.Topic, message.Content);
         }
 
         public MainApp Init()
@@ -79,41 +84,30 @@ namespace Alfred
 
             IEnumerable<string> pluginsNames = PluginStore.PluginsName();
             _logger.LogInformation("* Plugins Loaded:");
-            pluginsNames.ToList().ForEach(name => _logger.LogInformation($"    - {name}"));
+            pluginsNames.ToList().ForEach(name => _logger.LogInformation("    - {}", name));
 
             return this;
         }
 
-        public void Run()
-        {
-            //while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Q)
-            //{
-            //    _logger.LogInformation(".");
-            //}
-            PluginStore.Plugins.ToList().ForEach(plugin => plugin.Update());
-        }
-
-        private Timer _timer;
-
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start main service");
-            Init();
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+            _ = Init();
+            _ = _timer.Change(0, _period);
 
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _timer.Change(Timeout.Infinite, 0);
+            _ = _timer.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }
 
 
-        private void DoWork(object state)
+        private void Run(object? state)
         {
-            Run();
+            PluginStore.Plugins.ToList().ForEach(plugin => plugin.Update());
         }
 
         #endregion Public Methods
