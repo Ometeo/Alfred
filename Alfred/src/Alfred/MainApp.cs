@@ -8,14 +8,19 @@ using Alfred.Plugins;
 using Alfred.Sensors;
 using AlfredUtilities;
 using AlfredUtilities.Messages;
+using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Alfred
 {
-    public class MainApp : AlfredBase, IMessageListener
+    public class MainApp : AlfredBase, IHostedService, IMessageListener
     {
         #region Private Fields
 
         private readonly ILogger _logger;
+        private readonly Timer _timer;
+        private readonly uint _period = 5000;
 
         #endregion Private Fields
 
@@ -34,6 +39,9 @@ namespace Alfred
             PluginStore = pluginStore;
             _logger.LogInformation("* Create Message Dispatcher.");
             Dispatcher = dispatcher;
+            _logger.LogInformation("* Init main app timer.");
+            _timer = new Timer(Run, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(_period));
+            _ = _timer.Change(Timeout.Infinite, 0);
         }
 
         #endregion Public Constructors
@@ -65,7 +73,7 @@ namespace Alfred
 
         public void Consume(Message message)
         {
-            _logger.LogTrace($"* Receive message on main app : {message.Topic}, {message.Content}");
+            _logger.LogTrace("* Receive message on main app : {}, {}", message.Topic, message.Content);
         }
 
         public MainApp Init()
@@ -76,17 +84,29 @@ namespace Alfred
 
             IEnumerable<string> pluginsNames = PluginStore.PluginsName();
             _logger.LogInformation("* Plugins Loaded:");
-            pluginsNames.ToList().ForEach(name => _logger.LogInformation($"    - {name}"));
+            pluginsNames.ToList().ForEach(name => _logger.LogInformation("    - {}", name));
 
             return this;
         }
 
-        public void Run()
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            //while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Q)
-            //{
-            //    _logger.LogInformation(".");
-            //}
+            _logger.LogInformation("Start main service");
+            _ = Init();
+            _ = _timer.Change(0, _period);
+
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _ = _timer.Change(Timeout.Infinite, 0);
+            return Task.CompletedTask;
+        }
+
+
+        private void Run(object? state)
+        {
             PluginStore.Plugins.ToList().ForEach(plugin => plugin.Update());
         }
 
@@ -96,7 +116,8 @@ namespace Alfred
 
         protected override void DisposeManagedObjects()
         {
-            _logger.LogInformation("* Dispose Managed objects in main app");        
+            _logger.LogInformation("* Dispose Managed objects in main app");    
+            _timer.Dispose();
         }
 
         protected override void DisposeUnmanagedObjects()

@@ -27,7 +27,7 @@ namespace AlfredUtilities.Sensors
         /// </summary>
         public Type Type
         {
-            get { return Value.GetType(); }           
+            get { return Value.GetType(); }
         }
 
         /// <summary>
@@ -54,11 +54,11 @@ namespace AlfredUtilities.Sensors
         }
 
         protected override void DisposeManagedObjects()
-        {            
-            if(Value is IDisposable)
+        {
+            if (Value is IDisposable disposable)
             {
-                ((IDisposable)Value).Dispose();
-            }            
+                disposable.Dispose();
+            }
         }
 
         protected override void DisposeUnmanagedObjects()

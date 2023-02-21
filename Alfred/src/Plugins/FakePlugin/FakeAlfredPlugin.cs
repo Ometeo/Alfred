@@ -1,6 +1,8 @@
 ﻿using AlfredPlugin;
+
 using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
+
 using System;
 
 namespace FakePlugin
@@ -9,9 +11,8 @@ namespace FakePlugin
     {
         public string Name => "Fake plugin";
 
-        private IMessageDispatcher MessageDispatcher { get; set; }
-
-        bool created = false;
+        private IMessageDispatcher? _messageDispatcher;
+        private readonly uint _sensorNumber = 10;
 
         Sensor localSensor = Sensor.Null;
 
@@ -20,14 +21,14 @@ namespace FakePlugin
             if ("NewSensorResponse" == message.Topic)
             {
                 Guid guid = (Guid)message.Content;
-                Message readMessage = new Message()
+                Message readMessage = new ()
                 {
                     Topic = "ReadSensor",
                     Content = guid
                 };
 
-                MessageDispatcher.EnqueueMessage(readMessage);
-                MessageDispatcher.DequeueMessage();
+                _messageDispatcher?.EnqueueMessage(readMessage);
+                _ = _messageDispatcher?.DequeueMessage();
             }
             else if ("ReadSensorResponse" == message.Topic)
             {
@@ -35,26 +36,40 @@ namespace FakePlugin
             }
             else if ("UpdateSensorResponse" == message.Topic)
             {
-                if((bool)message.Content)
+                if ((bool)message.Content)
                 {
-                    Message readMessage = new Message()
+                    Message readMessage = new ()
                     {
                         Topic = "ReadSensor",
                         Content = localSensor.Id
                     };
 
-                    MessageDispatcher.EnqueueMessage(readMessage);
-                    MessageDispatcher.DequeueMessage();
+                    _messageDispatcher?.EnqueueMessage(readMessage);
+                    _ = _messageDispatcher?.DequeueMessage();
                 }
             }
         }
 
         public void Init(IMessageDispatcher messageDispatcher)
         {
-            MessageDispatcher = messageDispatcher;
-            MessageDispatcher.Register("NewSensorResponse", this);
-            MessageDispatcher.Register("UpdateSensorResponse", this);
-            MessageDispatcher.Register("ReadSensorResponse", this);
+            _messageDispatcher = messageDispatcher;
+            _ = _messageDispatcher?.Register("NewSensorResponse", this);
+            _ = _messageDispatcher?.Register("UpdateSensorResponse", this);
+            _ = _messageDispatcher?.Register("ReadSensorResponse", this);
+
+            for (int i = 0; i < _sensorNumber; i++)
+            {
+                Sensor sensor = new ($"Sensor_{i}");
+                sensor.Data.Add(new SensorData("value", 0));
+                Message message = new ()
+                {
+                    Topic = "NewSensor",
+                    Content = sensor
+                };
+                _messageDispatcher?.EnqueueMessage(message);
+                _ = _messageDispatcher?.DequeueMessage();
+            }
+
         }
 
         public bool Register()
@@ -63,34 +78,8 @@ namespace FakePlugin
         }
 
         public void Update()
-        {
-            Message message;
-
-            if (!created)
-            {
-                Sensor sensor = new Sensor("toto");
-                sensor.Data.Add(new SensorData("value", 42));
-
-                message = new Message()
-                {
-                    Topic = "NewSensor",
-                    Content = sensor
-                };
-            }
-            else
-            {
-                int value = (int)localSensor.Data[0].Value;
-                localSensor.Data[0].Value = ++value;
-
-                message = new Message()
-                {
-                    Topic = "UpdateSensor",
-                    Content = localSensor
-                };
-            }
-
-            MessageDispatcher.EnqueueMessage(message);
-            MessageDispatcher.DequeueMessage();
+        {    
+            // Empty for now.
         }
     }
 }
