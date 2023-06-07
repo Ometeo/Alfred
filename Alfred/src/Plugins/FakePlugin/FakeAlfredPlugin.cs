@@ -4,9 +4,11 @@ using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FakePlugin
 {
+    [ExcludeFromCodeCoverage]
     internal class FakeAlfredPlugin : IAlfredPlugin, IMessageListener
     {
         #region Private Fields
