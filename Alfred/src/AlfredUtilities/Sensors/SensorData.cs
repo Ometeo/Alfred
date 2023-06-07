@@ -4,42 +4,25 @@ namespace AlfredUtilities.Sensors
 {
     /// <summary>
     /// Stores data value for sensors.
-    /// 
+    ///
     /// <para>Value is stored in object type for handling every possible types of value.</para>
-    /// 
+    ///
     /// <para>The type of the value is also stored.</para>
-    /// 
-    /// </summary>   
+    ///
+    /// </summary>
     public class SensorData : AlfredBase
     {
-        /// <summary>
-        /// Name of the data.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Value of the data.
-        /// </summary>
-        public object Value { get; set; }
-
-        /// <summary>
-        /// Type of the value.
-        /// </summary>
-        public Type Type
-        {
-            get { return Value.GetType(); }
-        }
+        #region Public Constructors
 
         /// <summary>
         /// Default constructor.
-        /// 
+        ///
         /// <para>Name is Sensor by default.</para>
-        /// 
+        ///
         /// <para>Value takes the default value of its type.</para>
         /// </summary>
         public SensorData() : this("Sensor", default)
         {
-
         }
 
         /// <summary>
@@ -53,6 +36,32 @@ namespace AlfredUtilities.Sensors
             Value = initialValue;
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        /// <summary>
+        /// Name of the data.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Type of the value.
+        /// </summary>
+        public Type Type
+        {
+            get { return Value.GetType(); }
+        }
+
+        /// <summary>
+        /// Value of the data.
+        /// </summary>
+        public object Value { get; set; }
+
+        #endregion Public Properties
+
+        #region Protected Methods
+
         protected override void DisposeManagedObjects()
         {
             if (Value is IDisposable disposable)
@@ -65,5 +74,7 @@ namespace AlfredUtilities.Sensors
         {
             // Nothing to do.
         }
+
+        #endregion Protected Methods
     }
 }

@@ -5,7 +5,6 @@ using AlfredUtilities.Sensors;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Alfred.Controllers
@@ -17,21 +16,22 @@ namespace Alfred.Controllers
     [Route("[controller]")]
     public class SensorController : ControllerBase
     {
+        #region Private Fields
+
         private readonly ISensorService _sensorService;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SensorController(ISensorService sensorService)
         {
             _sensorService = sensorService;
         }
 
-        /// <summary>
-        /// Get all sensors. The sensors are fetched from an injected <see cref="ISensorService"/>.
-        /// </summary>
-        /// <returns><see cref="OkObjectResult"/> containing the sensors list.</returns>
-        [HttpGet]
-        public IActionResult GetAll() =>
-                Ok(_sensorService.Sensors.ToList());
+        #endregion Public Constructors
 
+        #region Public Methods
 
         /// <summary>
         /// Get a <see cref="Sensor"/> by its <see cref="Guid"/> Id.
@@ -44,11 +44,18 @@ namespace Alfred.Controllers
         {
             Sensor sensor = _sensorService.Read(id);
 
-            return Sensor.Null == sensor 
-                ? NotFound() 
+            return Sensor.Null == sensor
+                ? NotFound()
                 : Ok(sensor);
         }
 
+        /// <summary>
+        /// Get all sensors. The sensors are fetched from an injected <see cref="ISensorService"/>.
+        /// </summary>
+        /// <returns><see cref="OkObjectResult"/> containing the sensors list.</returns>
+        [HttpGet]
+        public IActionResult GetAll() =>
+                Ok(_sensorService.Sensors.ToList());
 
         /// <summary>
         /// Update a sensor.
@@ -66,11 +73,11 @@ namespace Alfred.Controllers
                 return BadRequest();
             }
 
-            return _sensorService.Update(id, sensor) 
-                ? Ok(_sensorService.Read(id)) 
+            return _sensorService.Update(id, sensor)
+                ? Ok(_sensorService.Read(id))
                 : NotFound();
         }
+
+        #endregion Public Methods
     }
 }
-
-

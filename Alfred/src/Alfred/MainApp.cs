@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Microsoft.Extensions.Logging;
-
-using Alfred.Plugins;
+﻿using Alfred.Plugins;
 using Alfred.Sensors;
+
 using AlfredUtilities;
 using AlfredUtilities.Messages;
+
 using Microsoft.Extensions.Hosting;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Alfred
 {
@@ -19,8 +20,8 @@ namespace Alfred
         #region Private Fields
 
         private readonly ILogger _logger;
-        private readonly Timer _timer;
         private readonly uint _period = 5000;
+        private readonly Timer _timer;
 
         #endregion Private Fields
 
@@ -29,7 +30,7 @@ namespace Alfred
         public MainApp(ISensorService sensorService, IMessageDispatcher dispatcher, IPluginStore pluginStore, ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<MainApp>();
-            
+
             _logger.LogInformation("* Create Alfred main app.");
 
             _logger.LogInformation("* Create Alfred sensor service.");
@@ -57,12 +58,12 @@ namespace Alfred
 
         #region Internal Properties
 
-        internal IPluginStore PluginStore
+        internal IMessageDispatcher Dispatcher
         {
             get; private set;
         }
 
-        internal IMessageDispatcher Dispatcher
+        internal IPluginStore PluginStore
         {
             get; private set;
         }
@@ -78,7 +79,7 @@ namespace Alfred
 
         public MainApp Init()
         {
-            _logger.LogInformation("* Init Alfred.");                                             
+            _logger.LogInformation("* Init Alfred.");
             _logger.LogInformation("* LoadPlugins.");
             PluginStore.LoadPlugins();
 
@@ -104,7 +105,6 @@ namespace Alfred
             return Task.CompletedTask;
         }
 
-
         private void Run(object? state)
         {
             PluginStore.Plugins.ToList().ForEach(plugin => plugin.Update());
@@ -116,7 +116,7 @@ namespace Alfred
 
         protected override void DisposeManagedObjects()
         {
-            _logger.LogInformation("* Dispose Managed objects in main app");    
+            _logger.LogInformation("* Dispose Managed objects in main app");
             _timer.Dispose();
         }
 

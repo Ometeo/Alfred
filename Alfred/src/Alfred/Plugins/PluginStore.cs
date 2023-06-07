@@ -1,4 +1,5 @@
 ﻿using AlfredPlugin;
+
 using AlfredUtilities;
 using AlfredUtilities.Messages;
 
@@ -17,10 +18,10 @@ namespace Alfred.Plugins
     {
         #region Private Fields
 
+        private readonly ILogger _logger;
         private readonly IMessageDispatcher messageDispatcher;
         private readonly IList<string> pluginsPath;
         private IEnumerable<IAlfredPlugin> plugins = new List<IAlfredPlugin>();
-        private readonly ILogger _logger;
 
         #endregion Private Fields
 
@@ -37,15 +38,6 @@ namespace Alfred.Plugins
 
         #region Public Methods
 
-        public void LoadPlugins()
-        {
-            plugins = pluginsPath.SelectMany(pluginPath =>
-            {
-                Assembly pluginAssembly = LoadPlugin(pluginPath);
-                return CreatePlugin(pluginAssembly);
-            }).ToList();
-        }
-
         /// <summary>
         /// Todo copy list.
         /// </summary>
@@ -58,6 +50,15 @@ namespace Alfred.Plugins
             }
         }
 
+        public void LoadPlugins()
+        {
+            plugins = pluginsPath.SelectMany(pluginPath =>
+            {
+                Assembly pluginAssembly = LoadPlugin(pluginPath);
+                return CreatePlugin(pluginAssembly);
+            }).ToList();
+        }
+
         public IEnumerable<string> PluginsName()
         {
             IEnumerable<string> toto = plugins.Select(plugin => plugin.Name);
@@ -67,6 +68,13 @@ namespace Alfred.Plugins
         #endregion Public Methods
 
         #region Protected Methods
+
+        protected static Assembly LoadPlugin(string pluginPath)
+        {
+            string pluginLocation = Path.GetFullPath(pluginPath.Replace('\\', Path.DirectorySeparatorChar));
+            AssemblyLoadContext loadContext = new(pluginLocation);
+            return loadContext.LoadFromAssemblyPath(pluginLocation);
+        }
 
         protected IEnumerable<IAlfredPlugin> CreatePlugin(Assembly pluginAssembly)
         {
@@ -97,13 +105,6 @@ namespace Alfred.Plugins
         protected override void DisposeUnmanagedObjects()
         {
             _logger.LogInformation("    * Dispose Unmanaged Objects in PluginStore");
-        }
-
-        protected static Assembly LoadPlugin(string pluginPath)
-        {
-            string pluginLocation = Path.GetFullPath(pluginPath.Replace('\\', Path.DirectorySeparatorChar));
-            AssemblyLoadContext loadContext = new (pluginLocation);
-            return loadContext.LoadFromAssemblyPath(pluginLocation);
         }
 
         #endregion Protected Methods

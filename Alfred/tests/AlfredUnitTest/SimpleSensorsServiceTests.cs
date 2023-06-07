@@ -1,18 +1,28 @@
-﻿using System;
-using Microsoft.Extensions.Logging.Abstractions;
-using Xunit;
-using FluentAssertions;
-
-using Alfred.Messages;
+﻿using Alfred.Messages;
 using Alfred.Sensors;
+
 using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
+
+using FluentAssertions;
+
+using Microsoft.Extensions.Logging.Abstractions;
+
+using System;
+
+using Xunit;
 
 namespace AlfredUnitTest
 {
     public class SimpleSensorsServiceTests
     {
+        #region Private Fields
+
         private readonly ISensorService sensorService;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SimpleSensorsServiceTests()
         {
@@ -20,21 +30,9 @@ namespace AlfredUnitTest
             sensorService = new SimpleSensorService(dispatcher, new NullLoggerFactory());
         }
 
-        [Fact]
-        [Trait("Category", "SensorService")]
-        public void AddNullSensorTest()
-        {
-            // volontary warning to test unexpected behaviours.
-            Sensor? sensor = null;
-#pragma warning disable CS8604 // Existence possible d'un argument de référence null.
-            Guid id = sensorService.Add(sensor);
-#pragma warning restore CS8604 // Existence possible d'un argument de référence null.
+        #endregion Public Constructors
 
-            id.Should().Be(Guid.Empty);
-            sensorService.Sensors.Should().BeEmpty("the sensor is null, so no sensor should be added to the service");            
-        }
-
-        // Todo : add another test to check with NullSensor. It should handle it as a null object. It is not the case for now.
+        #region Public Methods
 
         [Fact]
         [Trait("Category", "SensorService")]
@@ -48,10 +46,24 @@ namespace AlfredUnitTest
             id.Should().NotBe(Guid.Empty, "the service should have provided an id");
             sensor.Id.Should().Be(id, "the id of the sensor and the one returned by the service when the addition of the id should be the same");
             sensorService.Sensors.Should().HaveCount(1);
-            sensorService.Sensors[0].Name.Should().Be("Sensor42");            
+            sensorService.Sensors[0].Name.Should().Be("Sensor42");
         }
 
+        [Fact]
+        [Trait("Category", "SensorService")]
+        public void AddNullSensorTest()
+        {
+            // volontary warning to test unexpected behaviours.
+            Sensor? sensor = null;
+#pragma warning disable CS8604 // Existence possible d'un argument de référence null.
+            Guid id = sensorService.Add(sensor);
+#pragma warning restore CS8604 // Existence possible d'un argument de référence null.
 
+            id.Should().Be(Guid.Empty);
+            sensorService.Sensors.Should().BeEmpty("the sensor is null, so no sensor should be added to the service");
+        }
+
+        // Todo : add another test to check with NullSensor. It should handle it as a null object. It is not the case for now.
         [Fact]
         [Trait("Category", "SensorService")]
         public void AddSeveralSensorsTest()
@@ -65,19 +77,7 @@ namespace AlfredUnitTest
             Guid guid2 = sensorService.Add(sensor2);
 
             guid.Should().NotBe(guid2, "the two sensors id should be different");
-            sensorService.Sensors.Should().HaveCount(2);            
-        }
-
-        [Fact]
-        [Trait("Category", "SensorService")]
-        public void DeleteUnkownSensorTest()
-        {
-            Sensor sensor = new("UselessSensor");
-            sensorService.Add(sensor);
-
-            bool result = sensorService.Delete(Guid.NewGuid());
-            result.Should().BeFalse("deleting an unknown sensor should do nothing");
-            sensorService.Sensors.Should().HaveCount(1);
+            sensorService.Sensors.Should().HaveCount(2);
         }
 
         [Fact]
@@ -90,22 +90,20 @@ namespace AlfredUnitTest
             sensorService.Sensors.Should().HaveCount(1);
 
             bool result = sensorService.Delete(id);
-            result.Should().BeTrue("deleting the sensor should works");            
-            sensorService.Sensors.Should().BeEmpty();            
+            result.Should().BeTrue("deleting the sensor should works");
+            sensorService.Sensors.Should().BeEmpty();
         }
 
         [Fact]
         [Trait("Category", "SensorService")]
-        public void ReadWithUnknownIdTest()
+        public void DeleteUnkownSensorTest()
         {
-            Sensor sensor1 = new("UselessSensor");
-            sensorService.Add(sensor1);
+            Sensor sensor = new("UselessSensor");
+            sensorService.Add(sensor);
 
-            Guid id = Guid.NewGuid();
-
-            Sensor sensor = sensorService.Read(id);
-            sensor.Should().NotBeNull("event if no sensor are found the service should return NullSensor");
-            sensor.Should().Be(Sensor.Null, "if the id is not found in the service it should return NullSensor");            
+            bool result = sensorService.Delete(Guid.NewGuid());
+            result.Should().BeFalse("deleting an unknown sensor should do nothing");
+            sensorService.Sensors.Should().HaveCount(1);
         }
 
         [Fact]
@@ -124,7 +122,21 @@ namespace AlfredUnitTest
             Sensor sensor = sensorService.Read(id);
             sensor.Should().NotBeNull();
 
-            sensor.Should().Be(sensor2);           
+            sensor.Should().Be(sensor2);
+        }
+
+        [Fact]
+        [Trait("Category", "SensorService")]
+        public void ReadWithUnknownIdTest()
+        {
+            Sensor sensor1 = new("UselessSensor");
+            sensorService.Add(sensor1);
+
+            Guid id = Guid.NewGuid();
+
+            Sensor sensor = sensorService.Read(id);
+            sensor.Should().NotBeNull("event if no sensor are found the service should return NullSensor");
+            sensor.Should().Be(Sensor.Null, "if the id is not found in the service it should return NullSensor");
         }
 
         [Fact]
@@ -141,7 +153,9 @@ namespace AlfredUnitTest
             Sensor sensorFromService = sensorService.Read(id);
 
             result.Should().BeTrue();
-            sensorFromService.Name.Should().Be("Updated sensor");            
+            sensorFromService.Name.Should().Be("Updated sensor");
         }
+
+        #endregion Public Methods
     }
 }

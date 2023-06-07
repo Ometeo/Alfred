@@ -1,23 +1,31 @@
-﻿using System;
+﻿using AlfredUtilities.Sensors;
+
+using System;
 using System.Collections.Generic;
-using AlfredUtilities.Messages;
-using AlfredUtilities.Sensors;
 
 namespace Alfred.Sensors
 {
     public interface ISensorService : IDisposable
     {
+        #region Public Properties
+
         IList<Sensor> Sensors
         {
             get;
         }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
         Guid Add(Sensor newSensor);
 
-        bool Update(Guid id, Sensor updatedSensor);
+        bool Delete(Guid id);
 
         Sensor Read(Guid id);
 
-        bool Delete(Guid id);
+        bool Update(Guid id, Sensor updatedSensor);
+
+        #endregion Public Methods
     }
 }
