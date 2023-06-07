@@ -18,7 +18,7 @@
       },
       "applicationUrl": "https://localhost:51102;http://localhost:51103"
     },
-      "IIS Express": {
+    "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "launchUrl": "swagger",

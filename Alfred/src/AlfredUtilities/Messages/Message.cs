@@ -5,11 +5,16 @@
     /// </summary>
     public class Message
     {
+        #region Public Fields
+
         /// <summary>
-        /// Topic of message.
-        /// <para>Used for dispatch message to the correct listener.</para>
+        /// Null message.
         /// </summary>
-        public string Topic { get; set; } = string.Empty;
+        public static readonly Message Null = new NullMessage();
+
+        #endregion Public Fields
+
+        #region Public Properties
 
         /// <summary>
         /// Content of the message.
@@ -17,17 +22,28 @@
         public object? Content { get; set; }
 
         /// <summary>
-        /// Null message.
+        /// Topic of message.
+        /// <para>Used for dispatch message to the correct listener.</para>
         /// </summary>
-        public static readonly Message Null = new NullMessage();
+        public string Topic { get; set; } = string.Empty;
+
+        #endregion Public Properties
+
+        #region Private Classes
+
         private sealed class NullMessage : Message
         {
+            #region Public Constructors
+
             public NullMessage() : base()
             {
                 Topic = string.Empty;
                 Content = null;
             }
+
+            #endregion Public Constructors
         }
 
+        #endregion Private Classes
     }
 }

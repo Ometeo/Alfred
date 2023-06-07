@@ -7,21 +7,30 @@ using System;
 
 namespace FakePlugin
 {
-    class FakeAlfredPlugin : IAlfredPlugin, IMessageListener
+    internal class FakeAlfredPlugin : IAlfredPlugin, IMessageListener
     {
+        #region Private Fields
+
+        private readonly uint _sensorNumber = 10;
+        private IMessageDispatcher? _messageDispatcher;
+        private Sensor localSensor = Sensor.Null;
+
+        #endregion Private Fields
+
+        #region Public Properties
+
         public string Name => "Fake plugin";
 
-        private IMessageDispatcher? _messageDispatcher;
-        private readonly uint _sensorNumber = 10;
+        #endregion Public Properties
 
-        Sensor localSensor = Sensor.Null;
+        #region Public Methods
 
         public void Consume(Message message)
         {
             if ("NewSensorResponse" == message.Topic)
             {
                 Guid guid = (Guid)message.Content;
-                Message readMessage = new ()
+                Message readMessage = new()
                 {
                     Topic = "ReadSensor",
                     Content = guid
@@ -38,7 +47,7 @@ namespace FakePlugin
             {
                 if ((bool)message.Content)
                 {
-                    Message readMessage = new ()
+                    Message readMessage = new()
                     {
                         Topic = "ReadSensor",
                         Content = localSensor.Id
@@ -59,9 +68,9 @@ namespace FakePlugin
 
             for (int i = 0; i < _sensorNumber; i++)
             {
-                Sensor sensor = new ($"Sensor_{i}");
+                Sensor sensor = new($"Sensor_{i}");
                 sensor.Data.Add(new SensorData("value", 0));
-                Message message = new ()
+                Message message = new()
                 {
                     Topic = "NewSensor",
                     Content = sensor
@@ -69,7 +78,6 @@ namespace FakePlugin
                 _messageDispatcher?.EnqueueMessage(message);
                 _ = _messageDispatcher?.DequeueMessage();
             }
-
         }
 
         public bool Register()
@@ -78,8 +86,10 @@ namespace FakePlugin
         }
 
         public void Update()
-        {    
+        {
             // Empty for now.
         }
+
+        #endregion Public Methods
     }
 }

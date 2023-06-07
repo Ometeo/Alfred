@@ -1,14 +1,20 @@
 ﻿using AlfredUtilities.Messages;
+
 using System.Collections.Generic;
 
 namespace Alfred.Messages
 {
     public class MessageDispatcher : IMessageDispatcher
     {
-        private readonly Queue<Message> messages = new();
-        private readonly object messageLock = new();
+        #region Private Fields
 
+        private readonly object messageLock = new();
+        private readonly Queue<Message> messages = new();
         private readonly Dictionary<string, HashSet<IMessageListener>> registeredListener = new();
+
+        #endregion Private Fields
+
+        #region Public Methods
 
         public Message DequeueMessage()
         {
@@ -55,5 +61,7 @@ namespace Alfred.Messages
 
             return listeners.Add(listener);
         }
+
+        #endregion Public Methods
     }
 }

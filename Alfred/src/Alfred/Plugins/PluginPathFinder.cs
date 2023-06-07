@@ -12,12 +12,17 @@ namespace Alfred.Plugins
 {
     internal class PluginPathFinder : AlfredBase, IPluginPathFinder
     {
-        private readonly IList<string> paths = new List<string>();
+        #region Private Fields
 
         private readonly ILogger _logger;
+        private readonly IList<string> paths = new List<string>();
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public PluginPathFinder(ILoggerFactory loggerFactory, IConfiguration config)
-        {            
+        {
             _logger = loggerFactory.CreateLogger<PluginPathFinder>();
             string basePath = config.GetValue<string>("PluginsPath") ?? string.Empty;
             string executingAssemblyPath = Assembly.GetExecutingAssembly().Location;
@@ -32,10 +37,18 @@ namespace Alfred.Plugins
             }
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public IList<string> PluginPaths()
         {
             return paths;
         }
+
+        #endregion Public Methods
+
+        #region Protected Methods
 
         protected override void DisposeManagedObjects()
         {
@@ -46,5 +59,7 @@ namespace Alfred.Plugins
         {
             _logger.LogInformation("    * Dispose Unmanaged Objects in PluginPathFinder");
         }
+
+        #endregion Protected Methods
     }
 }

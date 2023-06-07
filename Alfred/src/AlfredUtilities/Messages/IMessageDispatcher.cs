@@ -8,16 +8,18 @@
     /// </summary>
     public interface IMessageDispatcher
     {
-        /// <summary>
-        /// Enqueue message on the dispatcher.
-        /// </summary>
-        /// <param name="message">Message to enqueue.</param>
-        void EnqueueMessage(Message message);
+        #region Public Methods
 
         /// <summary>
         /// Dequeue message on the dispatcher.
         /// </summary>
         Message DequeueMessage();
+
+        /// <summary>
+        /// Enqueue message on the dispatcher.
+        /// </summary>
+        /// <param name="message">Message to enqueue.</param>
+        void EnqueueMessage(Message message);
 
         /// <summary>
         /// Register listener to a topic.
@@ -26,5 +28,7 @@
         /// <param name="listener">listener to register.</param>
         /// <returns></returns>
         bool Register(string topic, IMessageListener listener);
+
+        #endregion Public Methods
     }
 }

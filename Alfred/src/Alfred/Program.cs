@@ -1,6 +1,7 @@
 ﻿using Alfred.Messages;
 using Alfred.Plugins;
 using Alfred.Sensors;
+
 using AlfredUtilities.Messages;
 
 using Microsoft.AspNetCore.Builder;
@@ -14,6 +15,8 @@ namespace Alfred
 {
     internal static class Program
     {
+        #region Private Methods
+
         private static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -46,5 +49,7 @@ namespace Alfred
             app.MapControllers();
             app.Run();
         }
+
+        #endregion Private Methods
     }
 }
