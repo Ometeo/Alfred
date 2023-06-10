@@ -19,12 +19,13 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}/.nuget/packages
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-nuget-
+            ${{ runner.os }}-nuget
       - name: Install dependencies
         run: |
           cd Alfred
@@ -36,12 +37,12 @@ jobs:
       - name: Test
         run: |
           cd Alfred
-          dotnet test --logger "trx;LogFileName=test-results-${{ matrix.dotnet-version }}.trx" || true
+          dotnet test --logger "trx;LogFileName=test-results.trx" || true
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: always()
         with:
           name: DotNET Tests
-          path: "**/test-results-${{ matrix.dotnet-version }}.trx"                            
+          path: "**/test-results.trx"                            
           reporter: dotnet-trx
           fail-on-error: true
