@@ -30,7 +30,7 @@ jobs:
       - name: Test
         run: |
           cd Alfred
-          dotnet test --logger "trx; LogFileName=test-results.trx" || true
+          dotnet test --logger "trx;LogFileName=test-results.trx" || true
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: always()
