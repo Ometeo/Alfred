@@ -30,12 +30,12 @@ jobs:
       - name: Test
         run: |
           cd Alfred
-          dotnet test --logger "trx; LogFileName=test-results-${{ matrix.dotnet-version }}.trx" || true
+          dotnet test --logger "trx; LogFileName=test-results.trx" || true
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: always()
         with:
           name: DotNET Tests
-          path: "**/test-result-${{ matrix.dotnet-version }}s.trx"                            
+          path: "**/test-result.trx"                            
           reporter: dotnet-trx
           fail-on-error: true
