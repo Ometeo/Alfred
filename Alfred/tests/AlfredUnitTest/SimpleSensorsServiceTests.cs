@@ -1,5 +1,5 @@
 ﻿using Alfred.Messages;
-using Alfred.Sensors;
+using Alfred.SensorsService;
 
 using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
@@ -18,7 +18,7 @@ namespace AlfredUnitTest
     {
         #region Private Fields
 
-        private readonly ISensorService sensorService;
+        private readonly ISensorsService sensorService;
 
         #endregion Private Fields
 
@@ -27,7 +27,7 @@ namespace AlfredUnitTest
         public SimpleSensorsServiceTests()
         {
             IMessageDispatcher dispatcher = new MessageDispatcher();
-            sensorService = new SimpleSensorService(dispatcher, new NullLoggerFactory());
+            sensorService = new SensorsService(dispatcher, new NullLoggerFactory());
         }
 
         #endregion Public Constructors
@@ -51,13 +51,25 @@ namespace AlfredUnitTest
 
         [Fact]
         [Trait("Category", "SensorService")]
-        public void AddNullSensorTest()
+        public void AddSensorNullTest()
         {
             // volontary warning to test unexpected behaviours.
             Sensor? sensor = null;
 #pragma warning disable CS8604 // Existence possible d'un argument de référence null.
             Guid id = sensorService.Add(sensor);
 #pragma warning restore CS8604 // Existence possible d'un argument de référence null.
+
+            id.Should().Be(Guid.Empty);
+            sensorService.Sensors.Should().BeEmpty("the sensor is null, so no sensor should be added to the service");
+        }
+
+        [Fact]
+        [Trait("Category", "SensorService")]
+        public void AddNullSensorTest()
+        {
+            // volontary warning to test unexpected behaviours.
+            Sensor sensor = Sensor.Null;
+            Guid id = sensorService.Add(sensor);
 
             id.Should().Be(Guid.Empty);
             sensorService.Sensors.Should().BeEmpty("the sensor is null, so no sensor should be added to the service");
@@ -153,6 +165,23 @@ namespace AlfredUnitTest
             Sensor sensorFromService = sensorService.Read(id);
 
             result.Should().BeTrue();
+            sensorFromService.Name.Should().Be("Updated sensor");
+        }
+
+        [Fact]
+        [Trait("Category", "SensorService")]
+        public void AddAnExistingSensorTest()
+        {
+            Sensor sensor = new("Not updated sensor");
+            Guid id = sensorService.Add(sensor);
+
+            sensor.Name = "Updated sensor";
+
+            Guid id2 = sensorService.Add(sensor);
+
+            Sensor sensorFromService = sensorService.Read(id);
+
+            id2.Should().Be(id);
             sensorFromService.Name.Should().Be("Updated sensor");
         }
 

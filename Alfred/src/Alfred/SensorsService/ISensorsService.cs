@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace Alfred.Sensors
+namespace Alfred.SensorsService
 {
-    public interface ISensorService : IDisposable
+    public interface ISensorsService : IDisposable
     {
         #region Public Properties
 

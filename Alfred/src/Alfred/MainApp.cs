@@ -1,5 +1,5 @@
 ﻿using Alfred.Plugins;
-using Alfred.Sensors;
+using Alfred.SensorsService;
 
 using AlfredUtilities;
 using AlfredUtilities.Messages;
@@ -27,7 +27,7 @@ namespace Alfred
 
         #region Public Constructors
 
-        public MainApp(ISensorService sensorService, IMessageDispatcher dispatcher, IPluginStore pluginStore, ILoggerFactory loggerFactory)
+        public MainApp(ISensorsService sensorService, IMessageDispatcher dispatcher, IPluginStore pluginStore, ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<MainApp>();
 
@@ -49,7 +49,7 @@ namespace Alfred
 
         #region Public Properties
 
-        public ISensorService SensorService
+        public ISensorsService SensorService
         {
             get; private set;
         }

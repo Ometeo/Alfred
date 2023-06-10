@@ -1,5 +1,5 @@
 ﻿using Alfred.Controllers;
-using Alfred.Sensors;
+using Alfred.SensorsService;
 
 using AlfredUtilities.Messages;
 using AlfredUtilities.Sensors;
@@ -24,7 +24,7 @@ namespace AlfredUnitTest
 
         private readonly Mock<IMessageDispatcher> _messageDispatcherMock;
         private readonly List<Sensor> _sensors;
-        private ISensorService _sensorService;
+        private ISensorsService _sensorsService;
 
         #endregion Private Fields
 
@@ -55,9 +55,9 @@ namespace AlfredUnitTest
             _messageDispatcherMock = new();
             _messageDispatcherMock.SetupAllProperties();
 
-            _sensorService = new SimpleSensorService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
-            _sensorService.Add(sensor);
-            _sensorService.Add(sensor2);
+            _sensorsService = new SensorsService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
+            _sensorsService.Add(sensor);
+            _sensorsService.Add(sensor2);
         }
 
         #endregion Public Constructors
@@ -69,7 +69,7 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Get")]
         public void GetAllSensorsTest()
         {
-            SensorController controller = new(_sensorService);
+            SensorController controller = new(_sensorsService);
             var result = controller.GetAll();
 
             result.Should().BeOfType(typeof(OkObjectResult));
@@ -85,9 +85,9 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Get")]
         public void GetAllSensorsWithEmptyTest()
         {
-            _sensorService = new SimpleSensorService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
+            _sensorsService = new SensorsService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
 
-            SensorController controller = new(_sensorService);
+            SensorController controller = new(_sensorsService);
             var result = controller.GetAll();
 
             result.Should().BeOfType(typeof(OkObjectResult));
@@ -101,9 +101,9 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Get")]
         public void GetSensorByIdEmptyListTest()
         {
-            _sensorService = new SimpleSensorService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
+            _sensorsService = new SensorsService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
 
-            SensorController controller = new(_sensorService);
+            SensorController controller = new(_sensorsService);
             var result = controller.Get(Guid.NewGuid());
 
             result.Should().BeOfType(typeof(NotFoundResult));
@@ -114,7 +114,7 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Get")]
         public void GetSensorByIdTest()
         {
-            SensorController controller = new(_sensorService);
+            SensorController controller = new(_sensorsService);
             var result = controller.Get(_sensors[0].Id);
 
             result.Should().BeOfType(typeof(OkObjectResult));
@@ -129,7 +129,7 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Get")]
         public void GetSensorByIdUnknownGuidTest()
         {
-            SensorController controller = new(_sensorService);
+            SensorController controller = new(_sensorsService);
             var result = controller.Get(Guid.NewGuid());
 
             result.Should().BeOfType(typeof(NotFoundResult));
@@ -140,7 +140,7 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Put")]
         public void UpdateSensorByIdTest()
         {
-            SensorController controller = new(_sensorService);
+            SensorController controller = new(_sensorsService);
             Sensor updateSensor = new(_sensors[0])
             {
                 Name = "NewSensorName"
@@ -165,7 +165,7 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Put")]
         public void UpdateSensorByIdWithUnknownIdTest()
         {
-            SensorController controller = new(_sensorService);
+            SensorController controller = new(_sensorsService);
             Sensor updateSensor = new(_sensors[0])
             {
                 Name = "NewSensorName",
@@ -181,7 +181,7 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Put")]
         public void UpdateSensorByIdWithWrongIdTest()
         {
-            SensorController controller = new(_sensorService);
+            SensorController controller = new(_sensorsService);
             Sensor updateSensor = new(_sensors[0])
             {
                 Name = "NewSensorName"
