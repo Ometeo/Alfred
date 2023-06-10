@@ -35,5 +35,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dotnet-results-${{ matrix.dotnet-version }}
-          path: TestResults-${{ matrix.dotnet-version }}
+          path: Alfred/TestResults-${{ matrix.dotnet-version }}
         if: ${{ always() }}
