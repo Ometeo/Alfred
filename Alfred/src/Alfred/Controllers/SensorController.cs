@@ -1,4 +1,4 @@
-﻿using Alfred.Sensors;
+﻿using Alfred.SensorsService;
 
 using AlfredUtilities.Sensors;
 
@@ -18,13 +18,13 @@ namespace Alfred.Controllers
     {
         #region Private Fields
 
-        private readonly ISensorService _sensorService;
+        private readonly ISensorsService _sensorService;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public SensorController(ISensorService sensorService)
+        public SensorController(ISensorsService sensorService)
         {
             _sensorService = sensorService;
         }
@@ -50,7 +50,7 @@ namespace Alfred.Controllers
         }
 
         /// <summary>
-        /// Get all sensors. The sensors are fetched from an injected <see cref="ISensorService"/>.
+        /// Get all sensors. The sensors are fetched from an injected <see cref="ISensorsService"/>.
         /// </summary>
         /// <returns><see cref="OkObjectResult"/> containing the sensors list.</returns>
         [HttpGet]

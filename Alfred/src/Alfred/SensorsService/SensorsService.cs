@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Alfred.Sensors
+namespace Alfred.SensorsService
 {
     /// <summary>
     /// Simple implementation of the Sensor Service Interface.
@@ -16,7 +16,7 @@ namespace Alfred.Sensors
     /// <para>Use GUID for attributing Id's of sensors.</para>
     ///
     /// </summary>
-    public class SimpleSensorService : AlfredBase, ISensorService, IMessageListener
+    public class SensorsService : AlfredBase, ISensorsService, IMessageListener
     {
         #region Private Fields
 
@@ -28,9 +28,9 @@ namespace Alfred.Sensors
 
         #region Public Constructors
 
-        public SimpleSensorService(IMessageDispatcher dispatcher, ILoggerFactory loggerFactory)
+        public SensorsService(IMessageDispatcher dispatcher, ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<SimpleSensorService>();
+            _logger = loggerFactory.CreateLogger<SensorsService>();
             _dispatcher = dispatcher;
             bool registerResult = dispatcher.Register("NewSensor", this);
             registerResult &= dispatcher.Register("UpdateSensor", this);
@@ -62,7 +62,7 @@ namespace Alfred.Sensors
         /// <returns>The new of the added sensor. <see>Guid.Empty</see> if <code>newSensor</code> is <code>null</code></returns>
         public Guid Add(Sensor newSensor)
         {
-            if (null != newSensor)
+            if (null != newSensor && !newSensor.Equals(Sensor.Null))
             {
                 Sensor sensor = Read(newSensor.Id);
                 if (sensor.Equals(Sensor.Null))

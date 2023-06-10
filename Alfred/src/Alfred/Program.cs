@@ -1,6 +1,6 @@
 ﻿using Alfred.Messages;
 using Alfred.Plugins;
-using Alfred.Sensors;
+using Alfred.SensorsService;
 
 using AlfredUtilities.Messages;
 
@@ -25,7 +25,7 @@ namespace Alfred
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<IPluginPathFinder, PluginPathFinder>()
                 .AddSingleton<IPluginStore, PluginStore>()
-                .AddSingleton<ISensorService, SimpleSensorService>()
+                .AddSingleton<ISensorsService, SensorsService.SensorsService>()
                 .AddSingleton<IMessageDispatcher, MessageDispatcher>()
                 .AddSingleton<ILoggerFactory, LoggerFactory>()
                 .AddSingleton<MainApp>()
