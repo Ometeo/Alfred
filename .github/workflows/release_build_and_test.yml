@@ -1,13 +1,10 @@
 name: BuildAndTest
-on:
-  push:
-    branches:
-      - '**'
+on: 
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build and Test
+    name: Release Build and Test
     runs-on: windows-latest
     strategy:
       matrix:
@@ -26,7 +23,7 @@ jobs:
       - name: Build
         run: |
           cd Alfred
-          dotnet build --configuration Debug --no-restore
+          dotnet build --configuration Release --no-restore
       - name: Test
         run: |
           cd Alfred
