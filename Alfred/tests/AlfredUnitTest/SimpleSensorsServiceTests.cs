@@ -183,6 +183,7 @@ namespace AlfredUnitTest
 
             id2.Should().Be(id);
             sensorFromService.Name.Should().Be("Updated sensor");
+            Assert.Fail("test fail");
         }
 
         #endregion Public Methods
