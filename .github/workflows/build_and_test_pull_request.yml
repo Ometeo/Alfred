@@ -1,0 +1,39 @@
+name: BuildAndTestPullRequest
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  build:
+    name: Build and Test On Pull Request
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        dotnet-version: ['6.0.x', '7.0.x', '8.0.x']
+        configuration: [Debug, Release]
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}      
+      - name: Install dependencies      
+        run: |
+          cd Alfred
+          dotnet restore
+      - name: Build
+        run: |
+          cd Alfred
+          dotnet build --configuration ${{ matrix.configuration }} --no-restore
+      - name: Test
+        run: |
+          cd Alfred
+          dotnet test --logger "trx;LogFileName=test-results.trx" || true
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: DotNET Tests
+          path: "**/test-results.trx"                            
+          reporter: dotnet-trx
+          fail-on-error: true
