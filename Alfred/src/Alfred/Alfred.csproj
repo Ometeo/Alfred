@@ -7,6 +7,7 @@
     <RootNamespace>Alfred</RootNamespace>
     <Nullable>enable</Nullable>
     <CodeAnalysisRuleSet>..\..\.sonarlint\ometeo_alfredcsharp.ruleset</CodeAnalysisRuleSet>
+    <Version>0.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
