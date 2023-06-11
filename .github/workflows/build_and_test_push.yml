@@ -1,15 +1,15 @@
-name: ReleaseBuildAndTest
-on: 
-  pull_request:
-    types: [opened, synchronize, reopened]
+name: BuildAndTestPush
+on:
+  push:
+    branches:
+      - '**'
 jobs:
   build:
-    name: Release Build and Test
+    name: Build and Test On Push
     runs-on: windows-latest
     strategy:
       matrix:
-        dotnet-version: ['6.0.x', '7.0.x', '8.0.x']
-    
+        dotnet-version: ['6.0.x']    
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
@@ -19,11 +19,11 @@ jobs:
       - name: Install dependencies      
         run: |
           cd Alfred
-          dotnet restore
+          nuget restore Alfred.sln
       - name: Build
         run: |
           cd Alfred
-          dotnet build --configuration Release --no-restore
+          dotnet build --configuration Debug --no-restore
       - name: Test
         run: |
           cd Alfred

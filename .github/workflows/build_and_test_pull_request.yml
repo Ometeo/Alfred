@@ -1,17 +1,15 @@
-name: BuildAndTest
-on:
-  push:
-    branches:
-      - '**'
+name: BuildAndTestPullRequest
+on: 
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build and Test
+    name: Build and Test On Pull Request
     runs-on: windows-latest
     strategy:
       matrix:
-        dotnet-version: ['6.0.x']
+        dotnet-version: ['6.0.x', '7.0.x', '8.0.x']
+        configuration: [Debug, Release]
     
     steps:
       - uses: actions/checkout@v3
@@ -22,11 +20,11 @@ jobs:
       - name: Install dependencies      
         run: |
           cd Alfred
-          nuget restore Alfred.sln
+          dotnet restore
       - name: Build
         run: |
           cd Alfred
-          dotnet build --configuration Debug --no-restore
+          dotnet build --configuration ${{ matrix.configuration }} --no-restore
       - name: Test
         run: |
           cd Alfred

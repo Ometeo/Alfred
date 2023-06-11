@@ -1,8 +1,5 @@
-name: SonarAnalysis
-on:
-  push:
-    branches:
-      - '**'
+name: Sonar
+on:  
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
