@@ -1,4 +1,4 @@
-name: BasicBuild
+name: SonarAnalysis
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build and analyze
+    name: SonarAnalysis
     runs-on: windows-latest
     steps:
       - name: Set up JDK 11
