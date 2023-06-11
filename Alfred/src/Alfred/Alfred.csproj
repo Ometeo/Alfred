@@ -6,6 +6,7 @@
     <AssemblyName>Alfred</AssemblyName>
     <RootNamespace>Alfred</RootNamespace>
     <Nullable>enable</Nullable>
+    <CodeAnalysisRuleSet>..\..\.sonarlint\ometeo_alfredcsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,10 @@
     <EmbeddedResource Remove="Message\**" />
     <None Remove="Communications\**" />
     <None Remove="Message\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\.sonarlint\ometeo_alfred\CSharp\SonarLint.xml" Link="SonarLint.xml" />
   </ItemGroup>
 
   <ItemGroup>
