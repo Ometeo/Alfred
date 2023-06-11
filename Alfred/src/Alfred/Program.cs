@@ -47,7 +47,7 @@ namespace Alfred
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
-            app.Run();
+            app.Run()
         }
 
         #endregion Private Methods
