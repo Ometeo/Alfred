@@ -31,6 +31,34 @@ namespace AlfredUnitTest
         }
 
         /// <summary>
+        /// Test the copy constructor with null parameter.
+        /// </summary>
+        [Fact]
+        [Trait("Category", "Sensor")]
+        [Trait("Category", "SensorData")]
+        public void SensorCopyNullParamTest()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = new Sensor((Sensor)null);
+            });
+        }
+
+        /// <summary>
+        /// Test the copy constructor with null parameter.
+        /// </summary>
+        [Fact]
+        [Trait("Category", "Sensor")]
+        [Trait("Category", "SensorData")]
+        public void SensorConstructorNullParamTest()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = new Sensor((string)null);
+            });
+        }
+
+        /// <summary>
         /// Test the instanciation's correctness for Sensor.
         /// </summary>
         [Fact]

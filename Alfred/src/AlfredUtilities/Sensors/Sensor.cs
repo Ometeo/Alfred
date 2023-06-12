@@ -24,11 +24,13 @@ namespace AlfredUtilities.Sensors
 
         public Sensor(string name)
         {
+            ArgumentNullException.ThrowIfNull(name);
             Name = name;
         }
 
         public Sensor(Sensor sensorToClone)
         {
+            ArgumentNullException.ThrowIfNull(sensorToClone);
             Name = sensorToClone.Name;
             Id = sensorToClone.Id;
             Data = sensorToClone.Data; // Todo deep copy.
