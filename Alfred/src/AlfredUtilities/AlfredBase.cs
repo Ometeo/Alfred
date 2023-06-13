@@ -6,7 +6,7 @@ namespace AlfredUtilities
     {
         #region Private Fields
 
-        private bool disposed = false;
+        private bool disposed;
 
         #endregion Private Fields
 
