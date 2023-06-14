@@ -6,7 +6,7 @@ using System;
 
 using Xunit;
 
-namespace AlfredUnitTest
+namespace Alfred.Tests
 {
     public class SensorTests
     {

@@ -12,7 +12,7 @@ using System;
 
 using Xunit;
 
-namespace AlfredUnitTest
+namespace Alfred.Tests
 {
     public class SensorsServiceTests
     {
@@ -27,7 +27,7 @@ namespace AlfredUnitTest
         public SensorsServiceTests()
         {
             IMessageDispatcher dispatcher = new MessageDispatcher();
-            sensorService = new SensorsService(dispatcher, new NullLoggerFactory());
+            sensorService = new SensorsService.SensorsService(dispatcher, new NullLoggerFactory());
         }
 
         #endregion Public Constructors
@@ -41,7 +41,7 @@ namespace AlfredUnitTest
             Assert.Throws<ArgumentNullException>(() =>
             {
 #pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = new SensorsService(dispatcher: null, loggerFactory: new NullLoggerFactory());
+                _ = new SensorsService.SensorsService(dispatcher: null, loggerFactory: new NullLoggerFactory());
 #pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
             });
         }
@@ -53,7 +53,7 @@ namespace AlfredUnitTest
             Assert.Throws<ArgumentNullException>(() =>
             {
 #pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = new SensorsService(dispatcher: new MessageDispatcher(), loggerFactory: null);
+                _ = new SensorsService.SensorsService(dispatcher: new MessageDispatcher(), loggerFactory: null);
 #pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
             });
         }
@@ -265,7 +265,7 @@ namespace AlfredUnitTest
             Assert.Throws<ArgumentNullException>(() =>
             {
 #pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                (sensorService as SensorsService)?.Consume(null);
+                (sensorService as SensorsService.SensorsService)?.Consume(null);
 #pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
             });
         }

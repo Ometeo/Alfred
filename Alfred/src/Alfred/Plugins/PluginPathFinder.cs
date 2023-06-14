@@ -3,6 +3,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,9 @@ namespace Alfred.Plugins
 
         public PluginPathFinder(ILoggerFactory loggerFactory, IConfiguration config)
         {
+            ArgumentNullException.ThrowIfNull(loggerFactory);
+            ArgumentNullException.ThrowIfNull(config);
+
             _logger = loggerFactory.CreateLogger<PluginPathFinder>();
             string basePath = config.GetValue<string>("PluginsPath") ?? string.Empty;
             string executingAssemblyPath = Assembly.GetExecutingAssembly().Location;

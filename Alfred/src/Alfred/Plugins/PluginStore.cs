@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 
 namespace Alfred.Plugins
@@ -29,6 +30,10 @@ namespace Alfred.Plugins
 
         public PluginStore(IPluginPathFinder pluginPathFinder, IMessageDispatcher messageDispatcher, ILoggerFactory loggerFactory)
         {
+            ArgumentNullException.ThrowIfNull(pluginPathFinder);
+            ArgumentNullException.ThrowIfNull(messageDispatcher);
+            ArgumentNullException.ThrowIfNull(loggerFactory);
+
             _logger = loggerFactory.CreateLogger<PluginStore>();
             pluginsPath = pluginPathFinder.PluginPaths();
             this.messageDispatcher = messageDispatcher;

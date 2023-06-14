@@ -1,23 +1,17 @@
-﻿using Alfred;
-using Alfred.Plugins;
+﻿using Alfred.Plugins;
 using Alfred.SensorsService;
 
 using AlfredUtilities.Messages;
-using AlfredUtilities.Sensors;
 
 using Microsoft.Extensions.Logging;
 
 using Moq;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xunit;
 
-namespace AlfredUnitTest
+namespace Alfred.Tests
 {
     public class MainAppTests
     {
