@@ -1,5 +1,6 @@
 ﻿using AlfredUtilities.Messages;
 
+using System;
 using System.Collections.Generic;
 
 namespace Alfred.Messages
@@ -37,6 +38,7 @@ namespace Alfred.Messages
 
         public void EnqueueMessage(Message message)
         {
+            ArgumentNullException.ThrowIfNull(message);
             lock (messageLock)
             {
                 messages.Enqueue(message);
@@ -53,6 +55,8 @@ namespace Alfred.Messages
         /// </returns>
         public bool Register(string topic, IMessageListener listener)
         {
+            ArgumentNullException.ThrowIfNull(topic);
+            ArgumentNullException.ThrowIfNull(listener);
             if (!registeredListener.TryGetValue(topic, out HashSet<IMessageListener>? listeners))
             {
                 listeners = new HashSet<IMessageListener>();

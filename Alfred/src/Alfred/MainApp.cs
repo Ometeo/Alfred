@@ -29,6 +29,11 @@ namespace Alfred
 
         public MainApp(ISensorsService sensorService, IMessageDispatcher dispatcher, IPluginStore pluginStore, ILoggerFactory loggerFactory)
         {
+            ArgumentNullException.ThrowIfNull(sensorService);
+            ArgumentNullException.ThrowIfNull(dispatcher);
+            ArgumentNullException.ThrowIfNull(pluginStore);
+            ArgumentNullException.ThrowIfNull(loggerFactory);
+
             _logger = loggerFactory.CreateLogger<MainApp>();
 
             _logger.LogInformation("* Create Alfred main app.");

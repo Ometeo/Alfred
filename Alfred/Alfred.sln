@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alfred", "src\Alfred\Alfred.csproj", "{52369EF4-72DD-4A03-85DB-6611453EDE1A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlfredUnitTest", "tests\AlfredUnitTest\AlfredUnitTest.csproj", "{E4248B8B-7634-477D-8E67-79733EA4CE55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alfred.Tests", "tests\AlfredUnitTest\Alfred.Tests.csproj", "{E4248B8B-7634-477D-8E67-79733EA4CE55}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlfredUtilities", "src\AlfredUtilities\AlfredUtilities.csproj", "{5D838D08-FC00-490B-AFD4-2C31C893B616}"
 EndProject

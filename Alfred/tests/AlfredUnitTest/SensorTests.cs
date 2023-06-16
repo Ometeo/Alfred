@@ -6,7 +6,7 @@ using System;
 
 using Xunit;
 
-namespace AlfredUnitTest
+namespace Alfred.Tests
 {
     public class SensorTests
     {
@@ -28,6 +28,34 @@ namespace AlfredUnitTest
             copy.Name.Should().Be("Sensor #1", "copy's name should be the same than the copied sensor");
             copy.Data.Should().HaveCount(1, "the copy should have the same number of data");
             copy.Data[0].Value.Should().Be(-15, "the data value of the copy should be the same than the copied one");
+        }
+
+        /// <summary>
+        /// Test the copy constructor with null parameter.
+        /// </summary>
+        [Fact]
+        [Trait("Category", "Sensor")]
+        [Trait("Category", "SensorData")]
+        public void SensorCopyNullParamTest()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = new Sensor(sensorToClone: null!);
+            });
+        }
+
+        /// <summary>
+        /// Test the copy constructor with null parameter.
+        /// </summary>
+        [Fact]
+        [Trait("Category", "Sensor")]
+        [Trait("Category", "SensorData")]
+        public void SensorConstructorNullParamTest()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = new Sensor(name: null!);
+            });
         }
 
         /// <summary>

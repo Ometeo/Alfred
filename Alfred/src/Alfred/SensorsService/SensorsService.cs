@@ -30,6 +30,9 @@ namespace Alfred.SensorsService
 
         public SensorsService(IMessageDispatcher dispatcher, ILoggerFactory loggerFactory)
         {
+            ArgumentNullException.ThrowIfNull(dispatcher);
+            ArgumentNullException.ThrowIfNull(loggerFactory);
+
             _logger = loggerFactory.CreateLogger<SensorsService>();
             _dispatcher = dispatcher;
             bool registerResult = dispatcher.Register("NewSensor", this);
@@ -62,7 +65,8 @@ namespace Alfred.SensorsService
         /// <returns>The new of the added sensor. <see>Guid.Empty</see> if <code>newSensor</code> is <code>null</code></returns>
         public Guid Add(Sensor newSensor)
         {
-            if (null != newSensor && !newSensor.Equals(Sensor.Null))
+            ArgumentNullException.ThrowIfNull(newSensor);
+            if (!newSensor.Equals(Sensor.Null))
             {
                 Sensor sensor = Read(newSensor.Id);
                 if (sensor.Equals(Sensor.Null))
@@ -83,6 +87,7 @@ namespace Alfred.SensorsService
 
         public void Consume(Message message)
         {
+            ArgumentNullException.ThrowIfNull(message);
             if (message.Topic == "NewSensor")
             {
                 Guid id = Add(message.Content as Sensor ?? Sensor.Null);
@@ -141,15 +146,14 @@ namespace Alfred.SensorsService
         /// <returns>True if update works, false otherwise.</returns>
         public bool Update(Guid id, Sensor updatedSensor)
         {
-            if (null != updatedSensor)
+            ArgumentNullException.ThrowIfNull(updatedSensor);
+
+            Sensor sensor = Read(id);
+            if (!sensor.Equals(Sensor.Null))
             {
-                Sensor sensor = Read(id);
-                if (!sensor.Equals(Sensor.Null))
-                {
-                    sensor.Data = updatedSensor.Data;
-                    sensor.Name = updatedSensor.Name;
-                    return true;
-                }
+                sensor.Data = updatedSensor.Data;
+                sensor.Name = updatedSensor.Name;
+                return true;
             }
 
             return false;

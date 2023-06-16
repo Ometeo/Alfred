@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 using Xunit;
 
-namespace AlfredUnitTest
+namespace Alfred.Tests
 {
     public class SensorControllerTests
     {
@@ -55,7 +55,7 @@ namespace AlfredUnitTest
             _messageDispatcherMock = new();
             _messageDispatcherMock.SetupAllProperties();
 
-            _sensorsService = new SensorsService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
+            _sensorsService = new SensorsService.SensorsService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
             _sensorsService.Add(sensor);
             _sensorsService.Add(sensor2);
         }
@@ -85,7 +85,7 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Get")]
         public void GetAllSensorsWithEmptyTest()
         {
-            _sensorsService = new SensorsService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
+            _sensorsService = new SensorsService.SensorsService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
 
             SensorController controller = new(_sensorsService);
             var result = controller.GetAll();
@@ -101,7 +101,7 @@ namespace AlfredUnitTest
         [Trait("Category", "SensorController_Get")]
         public void GetSensorByIdEmptyListTest()
         {
-            _sensorsService = new SensorsService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
+            _sensorsService = new SensorsService.SensorsService(_messageDispatcherMock.Object, NullLoggerFactory.Instance);
 
             SensorController controller = new(_sensorsService);
             var result = controller.Get(Guid.NewGuid());
