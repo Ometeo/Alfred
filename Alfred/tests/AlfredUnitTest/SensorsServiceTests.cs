@@ -40,9 +40,7 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = new SensorsService.SensorsService(dispatcher: null, loggerFactory: new NullLoggerFactory());
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                _ = new SensorsService.SensorsService(dispatcher: null!, loggerFactory: new NullLoggerFactory());
             });
         }
 
@@ -52,9 +50,7 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = new SensorsService.SensorsService(dispatcher: new MessageDispatcher(), loggerFactory: null);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                _ = new SensorsService.SensorsService(dispatcher: new MessageDispatcher(), loggerFactory: null!);
             });
         }
 
@@ -79,9 +75,7 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = sensorService.Add(null);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                _ = sensorService.Add(null!);
             });
 
             sensorService.Sensors.Should().BeEmpty("the sensor is null, so no sensor should be added to the service");
@@ -91,7 +85,6 @@ namespace Alfred.Tests
         [Trait("Category", "SensorService")]
         public void AddNullSensorTest()
         {
-            // volontary warning to test unexpected behaviours.
             Sensor sensor = Sensor.Null;
             Guid id = sensorService.Add(sensor);
 
@@ -200,9 +193,7 @@ namespace Alfred.Tests
 
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = sensorService.Update(id, null);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                _ = sensorService.Update(id, null!);
             });
         }
 
@@ -264,9 +255,7 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                (sensorService as SensorsService.SensorsService)?.Consume(null);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                (sensorService as SensorsService.SensorsService)?.Consume(null!);
             });
         }
 

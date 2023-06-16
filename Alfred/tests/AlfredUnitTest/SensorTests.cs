@@ -40,9 +40,7 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = new Sensor(sensorToClone: null);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                _ = new Sensor(sensorToClone: null!);
             });
         }
 
@@ -56,9 +54,7 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = new Sensor(name: null);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                _ = new Sensor(name: null!);
             });
         }
 

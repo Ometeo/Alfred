@@ -34,13 +34,11 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
                 _ = new MainApp(
-                    null,
+                    null!,
                     _messageDispatcherMock.Object,
                     _pluginStorerMock.Object,
                     _loggerFactoryMock.Object);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
             });
         }
 
@@ -50,13 +48,11 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
                 _ = new MainApp(
                     _sensorsServiceMock.Object,
-                    null,
+                    null!,
                     _pluginStorerMock.Object,
                     _loggerFactoryMock.Object);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
             });
         }
 
@@ -66,13 +62,11 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
                 _ = new MainApp(
                     _sensorsServiceMock.Object,
                     _messageDispatcherMock.Object,
-                    null,
+                    null!,
                     _loggerFactoryMock.Object);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
             });
         }
 
@@ -82,13 +76,11 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
                 _ = new MainApp(
                     _sensorsServiceMock.Object,
                     _messageDispatcherMock.Object,
                     _pluginStorerMock.Object,
-                    null);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                    null!);
             });
         }
     }

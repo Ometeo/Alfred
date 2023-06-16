@@ -20,9 +20,7 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = new PluginStore(pluginPathFinder: null, messageDispatcher: messageDispatcherMock.Object, loggerFactory: new NullLoggerFactory());
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                _ = new PluginStore(pluginPathFinder: null!, messageDispatcher: messageDispatcherMock.Object, loggerFactory: new NullLoggerFactory());
             });
         }
 
@@ -32,9 +30,7 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = new PluginStore(pluginPathFinder: pluginPathFinderMock.Object, messageDispatcher: null, loggerFactory: new NullLoggerFactory());
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                _ = new PluginStore(pluginPathFinder: pluginPathFinderMock.Object, messageDispatcher: null!, loggerFactory: new NullLoggerFactory());
             });
         }
 
@@ -44,9 +40,7 @@ namespace Alfred.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-#pragma warning disable CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
-                _ = new PluginStore(pluginPathFinder: pluginPathFinderMock.Object, messageDispatcher: messageDispatcherMock.Object, loggerFactory: null);
-#pragma warning restore CS8625 // Impossible de convertir un littéral ayant une valeur null en type référence non-nullable.
+                _ = new PluginStore(pluginPathFinder: pluginPathFinderMock.Object, messageDispatcher: messageDispatcherMock.Object, loggerFactory: null!);
             });
         }
     }
