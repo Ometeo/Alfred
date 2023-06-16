@@ -14,7 +14,7 @@ namespace Alfred.Tests
     public class PluginPathFinderTests
     {
         [Fact]
-        [Trait("Category", "PluginStore")]
+        [Trait("Category", "PluginPathFinder")]
         public void ConstructorNullLoggerTest()
         {
             Mock<IConfiguration> configurationMock = new();
@@ -26,7 +26,7 @@ namespace Alfred.Tests
         }
 
         [Fact]
-        [Trait("Category", "PluginStore")]
+        [Trait("Category", "PluginPathFinder")]
         public void ConstructorNullConfigurationTest()
         {
             Assert.Throws<ArgumentNullException>(() =>
